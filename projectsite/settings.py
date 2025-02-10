@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-u4b_ktr%28o+&_0-yf=ylqjo=s+&i7bbexgs#lx-#*_p%y(l_1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'book-cataloging-app-6c2bbf9fd554.herokuapp.com']
 
 
 # Application definition
