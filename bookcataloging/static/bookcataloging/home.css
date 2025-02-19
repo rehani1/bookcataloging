@@ -1,0 +1,33 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Merriweather:wght@400&display=swap');
+
+
+h1, h2, h3, h4, h5, h6 {
+    color: #232D4B;
+    font-family: 'Lato', sans-serif;
+}
+
+.nav-text {
+    color: white !important;
+}
+.nav-btn {
+    font-family: 'Lato', sans-serif;
+    color: #232d4b;
+}
+
+
+.main-title {
+    text-align: center;
+}
+
+.welcome-blurb {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #333333;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
