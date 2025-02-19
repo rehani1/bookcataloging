@@ -9,11 +9,34 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <main class="container mt-4 mt-5">
+    <header>
+        <nav class="navbar bg-body-tertiary nav-text" style="background-color: #232d4b">
+            <div class="container-fluid d-flex justify-content-between align-items-center w-100">
+                <a href="{% url 'bookcataloging:index' %}" class="btn nav-btn" style="margin-right: 12px; background-color: #ECF0F1">Home</a>
+
+                <div class="d-flex justify-content-center flex-grow-1">
+                    <span class="btn nav-btn" style="color: #ECF0F1;">Hello, User</span>
+                </div>
+
+                <div class="d-flex">
+                    <a href="#" class="btn nav-btn" style="margin-right: 12px; background-color: #ECF0F1">Log Out</a>
+                    <a href="#" class="btn nav-btn" style="background-color: #ECF0F1; margin-right: 12px;">Log In</a>
+                    <a href="#" class="btn nav-btn" style="margin-right: 12px; background-color: #ECF0F1">Sign Up</a>
+                    <a href="#" class="btn nav-btn" style="background-color: #ECF0F1; margin-right: 12px;">My Profile</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container mt-4 mt-5 d-flex justify-content-center align-items-start" style="min-height: 50vh;">
+    <div class="text-center">
         <h1 class="main-title">
             Book Recommendations
         </h1>
-        <p class="welcome-blurb text-center">Here are some book recommendations...</p>
-    </main>
+
+        <p class="welcome-blurb">
+            Here are some book recommendations...
+        </p>
+    </div>
+</main>
 </body>
 </html>
