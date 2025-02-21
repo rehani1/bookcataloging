@@ -89,26 +89,22 @@ WSGI_APPLICATION = 'projectsite.wsgi.application'
     # automatically by Heroku when a database addon is attached to your Heroku app. See:
     # https://devcenter.heroku.com/articles/provisioning-heroku-postgres#application-config-vars
     # https://github.com/jazzband/dj-database-url
-#IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
+# IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
 
-#if IS_HEROKU_APP:
-# DATABASES = {
-#     "default": dj_database_url.config(
-#         env="DATABASE_URL",
-#         conn_max_age=600,
-#         conn_health_checks=True,
-#         ssl_require=True,
-#         )
-# }
-#else:
+# if IS_HEROKU_APP:
+#     DATABASES = {
+#         "default": dj_database_url.config(
+#             env="DATABASE_URL",
+#             conn_max_age=600,
+#             conn_health_checks=True,
+#             ssl_require=True,
+#             )
+#     }
+# else:
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "bookcatalogingapp",
-        "USER": "test",
-        "password": "password",
-        "HOST": "127.0.0.1",
-        "POST": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
