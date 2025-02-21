@@ -7,6 +7,5 @@ app_name = "bookcataloging"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("book_recs/", views.book_recs, name="book_recs"),
-    path('login/', include('allauth.urls')),
     path('logout', LogoutView.as_view()),
 ]
