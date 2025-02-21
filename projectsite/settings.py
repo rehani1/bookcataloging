@@ -89,25 +89,18 @@ WSGI_APPLICATION = 'projectsite.wsgi.application'
     # automatically by Heroku when a database addon is attached to your Heroku app. See:
     # https://devcenter.heroku.com/articles/provisioning-heroku-postgres#application-config-vars
     # https://github.com/jazzband/dj-database-url
-# IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
 
-# if IS_HEROKU_APP:
-#     DATABASES = {
-#         "default": dj_database_url.config(
-#             env="DATABASE_URL",
-#             conn_max_age=600,
-#             conn_health_checks=True,
-#             ssl_require=True,
-#             )
-#     }
-# else:
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
+DATABASES = { 
+    'default': { 
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'd80klm6fqk6017', 
+        'USER': 'u4iacpj5v7n7p0', 
+        'PASSWORD': 'pe6cd64daec2c255d5aa456703cf407746c6b375eefe3c14b0a98f4fd249a9405', 
+        'HOST': 'c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', 
+        'PORT': '5432', 
+    } 
+} 
 
 
 # Password validation
@@ -170,7 +163,7 @@ SOCIALACCOUNT_PROVIDERS =  {
     }
 }
 
-SITE_ID = 2
+SITE_ID = 1
 
 LOGIN_REDIRECT_URL = "/bookcataloging/"
 LOGOUT_REDIRECT_URL = "/bookcataloging/"
