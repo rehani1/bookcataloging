@@ -1,6 +1,6 @@
 <nav class="navbar bg-body-tertiary nav-text" style="background-color: #232d4b">
   <div class="container-fluid">
-    <a class="navbar-brand nav-text" href="#">Book Catalog</a>
+    <a class="navbar-brand nav-text" href="{% url 'bookcataloging:index' %}">Book Catalog</a>
     <form class="d-flex" role="search">
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1"
         >Hello, User</span
@@ -30,7 +30,7 @@
         >Sign Up</a
       >
       <a
-        href="#"
+        href="{% url 'bookcataloging:profile' %}"
         class="btn nav-btn"
         style="background-color: #ecf0f1; margin-right: 12px"
         >My Profile</a
