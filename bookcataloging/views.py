@@ -10,3 +10,6 @@ class IndexView(TemplateView):
 
 def book_recs(request):
     return render(request, 'bookcataloging/book_recs.html')
+
+def profile_view(request):
+    return render(request, 'bookcataloging/profile.html')
