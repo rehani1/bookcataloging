@@ -1,10 +1,20 @@
 <nav class="navbar bg-body-tertiary nav-text" style="background-color: #232d4b">
   <div class="container-fluid">
-    <a class="navbar-brand nav-text" href="{% url 'bookcataloging:index' %}">Book Catalog</a>
+    <a class="navbar-brand nav-text" href="{% url 'bookcataloging:index' %}"
+      >Book Catalog</a
+    >
     <form class="d-flex" role="search">
-      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1"
-        >Hello, User</span
-      >
+      {% if request.user.is_authenticated %}
+      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
+        Hello, {{ request.user.first_name|default:request.user.username }} {% if
+        request.user.groups.first %} | {{ request.user.groups.first.name }} {%
+        endif %}
+      </span>
+      {% else %}
+      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
+        Hello, Guest
+      </span>
+      {% endif %}
       <a
         href="{% url 'bookcataloging:book_recs' %}"
         class="btn nav-btn"
