@@ -6,9 +6,7 @@
     <form class="d-flex" role="search">
       {% if request.user.is_authenticated %}
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
-        Hello, {{ request.user.first_name|default:request.user.username }} {% if
-        request.user.groups.first %} | {{ request.user.groups.first.name }} {%
-        endif %}
+        Hello, {{ request.user.first_name|default:request.user.username }}
       </span>
       {% else %}
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
