@@ -6,9 +6,14 @@
     <form class="d-flex" role="search">
       {% if request.user.is_authenticated %}
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
-        Hello, {{ request.user.first_name|default:request.user.username }}  | {{ request.user.groups.first.name }} 
-      </span>
+        Hello, {{ request.user.first_name|default:request.user.username }} | 
+        {% if user_role %}
+        {{ user_role }}
       {% else %}
+        (No role assigned)
+      {% endif %}
+        </span>
+        {% else %}
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
         Hello, Guest
       </span>

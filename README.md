@@ -4,6 +4,4 @@ Installations and Dependencies:
 git clone https://github.com/uva-cs3240-s25/project-b-30.git
 pip install -r "requirements.txt"
 python manage.py migrate
-How to update app: 
-heroku git:remote -a book-cataloging-app
-git push heroku main
+python manage.py runserver
