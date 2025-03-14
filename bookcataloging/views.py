@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import HttpResponse
 from .models import UserProfile
@@ -33,5 +33,12 @@ def profile_view(request):
 
     context = {'profile': profile,
     'user_role': user_role}
+    
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        profile.profile_picture = request.FILES['profile_picture']
+        profile.save()
+        print(profile.profile_picture)
+        return redirect('bookcataloging:profile')
+
     return render(request, 'bookcataloging/profile.html', context)
 
