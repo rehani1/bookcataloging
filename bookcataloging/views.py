@@ -34,10 +34,9 @@ def profile_view(request):
     context = {'profile': profile,
     'user_role': user_role}
     
-    if request.method == 'POST' and request.FILES.get('profile_picture'):
+    if request.method == 'POST':
         profile.profile_picture = request.FILES['profile_picture']
         profile.save()
-        print(profile.profile_picture)
         return redirect('bookcataloging:profile')
 
     return render(request, 'bookcataloging/profile.html', context)
