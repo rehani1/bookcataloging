@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponse
+from .models import UserProfile
 
 def get_role(request):
     user_role = ''
@@ -21,6 +22,16 @@ def book_recs(request):
     return render(request, 'bookcataloging/book_recs.html', {'user_role': user_role})
 
 def profile_view(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user,
+    defaults=
+    {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+    }
+    )
     user_role = get_role(request)
-    return render(request, 'bookcataloging/profile.html', {'user_role': user_role})
+
+    context = {'profile': profile,
+    'user_role': user_role}
+    return render(request, 'bookcataloging/profile.html', context)
 
