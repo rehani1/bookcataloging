@@ -22,6 +22,48 @@
             Here are some book recommendations...
         </p>
     </div>
+
+    <div class="mt-5">
+        <h3>Books by Your Favorite Authors</h3>
+        {% if author_recommendations %}
+            <ul>
+                {% for book in author_recommendations %}
+                    <li>{{ book.title }} by {{ book.author }} (Rating: {{ book.rating }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No books found for your favorite authors based on your reading and ratings.
+            Read and rate more books to get better recommendations.</p>
+        {% endif %}
+    </div>
+
+    <div class="mt-5">
+        <h3>Popular Books in Genres You've Read</h3>
+        {% if genre_recommendations %}
+            <ul>
+                {% for book in genre_recommendations %}
+                    <li>{{ book.title }} by {{ book.author }} (Rating: {{ book.rating }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No books found in genres you've read that meet the criteria.
+            Read and rate more books to get better recommendations.</p>
+        {% endif %}
+    </div>
+
+    <div class="mt-5">
+        <h3>General Book Recommendations</h3>
+        {% if general_recommendations %}
+            <ul>
+                {% for book in general_recommendations %}
+                    <li>{{ book.title }} by {{ book.author }} (Rating: {{ book.rating }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No popular books found that meet the general recommendation criteria.</p>
+        {% endif %}
+    </div>
+
 </main>
 </body>
 </html>

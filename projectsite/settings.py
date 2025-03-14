@@ -104,15 +104,16 @@ WSGI_APPLICATION = 'projectsite.wsgi.application'
     # https://github.com/jazzband/dj-database-url
 
 
-DATABASES = { 
-    'default': { 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'd80klm6fqk6017', 
-        'USER': 'u4iacpj5v7n7p0', 
-        'PASSWORD': 'pe6cd64daec2c255d5aa456703cf407746c6b375eefe3c14b0a98f4fd249a9405', 
-        'HOST': 'c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', 
-        'PORT': '5432', 
-    } 
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'd80klm6fqk6017',
+    #     'USER': 'u4iacpj5v7n7p0',
+    #     'PASSWORD': 'pe6cd64daec2c255d5aa456703cf407746c6b375eefe3c14b0a98f4fd249a9405',
+    #     'HOST': 'c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+    #     'PORT': '5432',
+    # }
 } 
 
 
