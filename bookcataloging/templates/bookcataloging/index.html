@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!--https://cs4640.cs.virginia.edu/ncd6fc/UVADormRater/-->
     <meta charset="UTF-8">
@@ -23,12 +24,13 @@
             Welcome to Book Catalog! Search for a book to check out, find some recommendations, and more!
         </p>
 
-        <form action="search.html" method="get">
-        <div class="search-bar mt-5 mb-5">
-        <input class="form-control" type="search" name="query" placeholder="Search for a book" aria-label="Search">
-        </div>
+        <form action="{% url 'bookcataloging:search' %}" method="get">
+            <div class="search-bar mt-5 mb-5">
+                <input class="form-control" type="search" name="query" placeholder="Search for a book"
+                    aria-label="Search">
+            </div>
         </form>
-        
+
 
 
     </main>
