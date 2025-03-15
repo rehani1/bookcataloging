@@ -52,6 +52,8 @@ def book_recs(request):
     return render(request, 'bookcataloging/book_recs.html', {'user_role': user_role})
 
 def profile_view(request):
+    if not request.user.is_authenticated:
+        return render(request, "bookcataloging/guest_profile.html")
     profile, created = UserProfile.objects.get_or_create(user=request.user,
     defaults=
     {
@@ -61,13 +63,14 @@ def profile_view(request):
     )
     user_role = get_role(request)
 
-    context = {'profile': profile,
-    'user_role': user_role}
     
     if request.method == 'POST':
         profile.profile_picture = request.FILES['profile_picture']
         profile.save()
         return redirect('bookcataloging:profile')
+    context = {'profile': profile,
+    'user_role': user_role}
+    
 
     return render(request, 'bookcataloging/profile.html', context)
 
