@@ -21,20 +21,33 @@ def index_view(request):
 def search_view(request):
     user_role = get_role(request)
     query = request.GET.get('query', '').strip()
-    if query:
+    results = []
 
-        # Perform a search query on your Book model (or any other data source)
-        results = Book.objects.filter(title__icontains=query)
+    if query:
+        results = Book.objects.filter(title__icontains=query) # gets the search results from the query (book title)
+
+    if request.method == 'POST': # when submitting the image change
+        book_id = request.POST.get('book_id') # get by book id
+        if book_id:
+            book = Book.objects.get(id=book_id)
+            if 'book_picture' in request.FILES:
+                book.book_image = request.FILES['book_picture']
+                book.save()
+            else:
+                print("No image file provided.")
+        else:
+            print("No book ID provided in the form.")
+
+        return redirect(f"{request.path}?query={query}")
 
     context = {
         'query': query,
         'results': results,
+        'user_role': user_role,
     }
-    print(context)
-    return render(request, 'bookcataloging/search.html', {'user_role': user_role})
+    return render(request, 'bookcataloging/search.html', context)
 
-
-def book_recs(request):
+def book_recs(request): 
     user_role = get_role(request)
     return render(request, 'bookcataloging/book_recs.html', {'user_role': user_role})
 

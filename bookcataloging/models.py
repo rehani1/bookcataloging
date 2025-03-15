@@ -31,6 +31,7 @@ class Book(models.Model):
     rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     review = models.TextField()
     read_status = models.BooleanField()
+    book_image = models.ImageField(upload_to='book_pics/', blank=True)
 
     def __str__(self):
         return self.title
@@ -62,7 +63,7 @@ class Book(models.Model):
             read_status=read_status,
             rating=rating,
             review=review,
-            genre=genre
+            genre=genre,
         )
 
     def get_reviews(self):

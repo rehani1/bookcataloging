@@ -1,13 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!--https://cs4640.cs.virginia.edu/ncd6fc/UVADormRater/-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Yuina Barzdukas">
-    <title>Search</title>
-    <link rel="stylesheet" href="../../static/bookcataloging/home.css">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -17,16 +17,63 @@
     </header>
     <main class="container mt-4 mt-5">
         <h1 class="main-title">
-            Search
+            Search Results
         </h1>
-        <form action="{% url 'bookcataloging:search' %}" method="get">
-            <div class="search-bar mt-5 mb-5">
-                <input class="form-control" type="search" name="query" placeholder="Search for a book"
+
+        <form action="{% url 'bookcataloging:search' %}" method="get" class="mt-5">
+            <div class="search-bar">
+                <input class="form-control" type="search" name="query" placeholder="Search for another book"
                     aria-label="Search">
             </div>
         </form>
 
+        <div class="search-results mt-5">
+            {% if results %}
+            <h2>Results:</h2>
+            <div class="row">
+                {% for book in results %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'bookcataloging:search' %}?query={{ query }}"
+                                enctype="multipart/form-data" id="book-pic-form-{{ book.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="book_id" value="{{ book.id }}">
+                                <div>
+                                    <img src="{% if book.book_image %}{{ book.book_image.url }}{% else %}
+                                    https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg
+                                    {% endif %}" class="card-img-top" alt="Book Image"
+                                        id="book-pic-preview-{{ book.id }}"
+                                        onclick="document.getElementById('id_book_picture_{{ book.id }}').click()" />
+                                    <input type="file" name="book_picture" id="id_book_picture_{{ book.id }}"
+                                        accept="image/*" style="display: none;"
+                                        onchange="document.getElementById('book-pic-form-{{ book.id }}').submit()">
+                                </div>
+                            </form>
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+                            <p class="card-text">
+                                <strong>Genre:</strong> {{ book.genre }}<br>
+                                <strong>Rating:</strong> {{ book.rating|default:"Not rated" }}<br>
+                                <strong>ISBN:</strong> {{ book.isbn }}<br>
+                                <strong>Read Status:</strong> {{ book.read_status|yesno:"Read,Not Read" }}
+                            </p>
+                            {% if book.review %}
+                            <p class="card-text">
+                                <strong>Review:</strong> {{ book.review }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No results found for "{{ query }}".</p>
+            {% endif %}
+        </div>
     </main>
+    <script src="{% static 'bookcataloging/book_img.js' %}" defer></script>
 </body>
 
 </html>
