@@ -21,8 +21,16 @@ def index_view(request):
 def search_view(request):
     user_role = get_role(request)
     query = request.GET.get('query', '').strip()
-    print(query)
+    if query:
 
+        # Perform a search query on your Book model (or any other data source)
+        results = Book.objects.filter(title__icontains=query)
+
+    context = {
+        'query': query,
+        'results': results,
+    }
+    print(context)
     return render(request, 'bookcataloging/search.html', {'user_role': user_role})
 
 
