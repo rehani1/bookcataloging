@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Profile</title>
+    <meta name="author" content="Rehan Islam" />
+    <link rel="stylesheet" href="../static/bookcataloging/home.css" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>{% include "bookcataloging/navbar.html" %}</header>
+    <main class="container mt-4">
+      <h1>Edit Profile</h1>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'bookcataloging:profile' %}" class="btn btn-secondary"
+          >Cancel</a
+        >
+      </form>
+    </main>
+  </body>
+</html>

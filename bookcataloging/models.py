@@ -8,7 +8,15 @@ class UserProfile(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default="A passionate book enthusiast.")
+    quote = models.CharField(
+        max_length=255, 
+        blank=True, 
+        default='"I solemnly swear that I am up to no good" - Harry Potter'
+    )
+    books_read = models.PositiveIntegerField(default=0)
+    pages_read = models.PositiveIntegerField(default=0)
+    friends = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"

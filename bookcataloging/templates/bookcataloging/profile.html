@@ -15,7 +15,13 @@
     {% include "bookcataloging/navbar.html" %}
   </header>
   <div class="container text-left my-4">
-
+    <div class="d-flex justify-content-end mb-3">
+      <a
+          href="{% url 'bookcataloging:edit_profile' %}"
+          class="btn btn-secondary"
+          >Edit Profile</a
+        >
+      </div>
     <form method="POST" enctype="multipart/form-data" id="profile-pic-form">
       {% csrf_token %}
       <div>
@@ -30,21 +36,21 @@
       </div>
     </form>
     <h1 class="mt-3">{{profile.user.first_name}} {{profile.user.last_name}}</h1>
-    <p class="lead">A passionate book enthusiast.</p>
-    <p1><em>"I solemnly swear that I am up to no good" - Harry Potter</em></p1>
+    <p class="lead">{{ profile.description }}</p>
+    <p1><em>{{ profile.quote }}</em></p1>
   </div>
   <div style="display: flex; justify-content: space-around; margin: 20px 0">
     <div>
       <h3>Books Read</h3>
-      <p>25</p>
+      <p>{{ profile.books_read }}</p>
     </div>
     <div>
       <h3>Pages Read</h3>
-      <p>5000</p>
+      <p>{{ profile.pages_read }}</p>
     </div>
     <div>
       <h3>Friends</h3>
-      <p>19</p>
+      <p>{{ profile.friends }}</p>
     </div>
   </div>
   <script src="{% static '../static/bookcataloging/profile.js' %}" defer></script>
