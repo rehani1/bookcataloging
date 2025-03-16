@@ -121,22 +121,18 @@ class BookReviewModelTest(TestCase):
         BookReview.objects.create(user=self.user3, book=self.book3, rating=5, review="Awesome!", read_status=True)
         BookReview.objects.create(user=self.user4, book=self.book3, rating=4, review="Awesome!", read_status=True)
 
-
     def test_create_book_review(self):
         """Test that a BookReview instance is created correctly"""
         review = BookReview.objects.create(
-            user=self.user,
+            user=self.user1,
             book=self.book1,
             rating=5,
             review="Awesome book!",
             read_status=True
         )
 
-        # Fetch the review from the database
         saved_review = BookReview.objects.get(id=review.id)
-
-        # Assertions
-        self.assertEqual(saved_review.user, self.user)
+        self.assertEqual(saved_review.user, self.user1)
         self.assertEqual(saved_review.book, self.book1)
         self.assertEqual(saved_review.rating, 5)
         self.assertEqual(saved_review.review, "Awesome book!")
