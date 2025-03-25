@@ -22,6 +22,11 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
+class Collections(models.Model):
+    books = [] # TODO: modify to be a list of books in the collection
+    name = models.CharField(max_length=100)
+
+
 class Book(models.Model):
     GENRE_CHOICES = [
         ('fantasy', 'Fantasy'),
@@ -40,6 +45,7 @@ class Book(models.Model):
     review = models.TextField()
     read_status = models.BooleanField()
     book_image = models.ImageField(upload_to='book_pics/', blank=True)
+    # TODO: auto add to author and series collections
 
     def __str__(self):
         return self.title
