@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import UserProfile, Book, BookReview
+from .models import UserProfile, Book, BookReview, Collections
 from django.contrib.auth.models import User
 
 
@@ -175,3 +175,50 @@ class UserProfileTest(TestCase):
         self.assertEqual(self.profile.last_name, "Longstocking")
         self.assertEqual(self.profile.description, "An energetic reader!")
         self.assertFalse(self.profile.profile_picture)
+
+
+class CollectionsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="password123")
+
+    def test_create_book_and_auto_assign_collections(self):
+        book = Book.create_book(
+            title="The Fellowship of the Ring",
+            author="J.R.R. Tolkien",
+            isbn="9780618968633",
+            genre="fantasy",
+            user=self.user,
+            series="The Lord of the Rings"
+        )
+
+        self.assertEqual(Book.objects.count(), 1)
+
+        author_collection = Collections.objects.get(name="Books by J.R.R. Tolkien")
+        self.assertIn(book, author_collection.books.all())
+
+        series_collection = Collections.objects.get(name="Series: The Lord of the Rings")
+        self.assertIn(book, series_collection.books.all())
+
+        user_collection = Collections.objects.get(name="testuser's Collection")
+        self.assertIn(book, user_collection.books.all())
+
+    def test_create_collection(self):
+        collection = Collections.create_collection(name="My Favs", owner=self.user)
+
+        self.assertEqual(Collections.objects.count(), 1)
+        self.assertEqual(collection.name, "My Favs")
+        self.assertEqual(collection.owner, self.user)
+        self.assertTrue(collection.is_public)
+
+    def test_add_book_to_collection(self):
+        book = Book.create_book(
+            title="Dune",
+            author="Frank Herbert",
+            isbn="9780441172719",
+            genre="science_fiction",
+            user=self.user
+        )
+
+        collection = Collections.create_collection(name="Sci-Fi Books", owner=self.user)
+        collection.add_book(book)
+        self.assertIn(book, collection.books.all())

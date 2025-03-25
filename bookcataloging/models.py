@@ -22,11 +22,6 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
-class Collections(models.Model):
-    books = [] # TODO: modify to be a list of books in the collection
-    name = models.CharField(max_length=100)
-
-
 class Book(models.Model):
     GENRE_CHOICES = [
         ('fantasy', 'Fantasy'),
@@ -45,7 +40,8 @@ class Book(models.Model):
     review = models.TextField()
     read_status = models.BooleanField()
     book_image = models.ImageField(upload_to='book_pics/', blank=True)
-    # TODO: auto add to author and series collections
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
+    series = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -67,9 +63,10 @@ class Book(models.Model):
         return cls.objects.filter(title=title).values('review')
 
     @classmethod
-    def create_book(cls, title, author, isbn, genre, read_status=False, rating=None, review=None):
+    def create_book(cls, title, author, isbn, genre, user, read_status=False, rating=None, review=None, series=None):
         if cls.objects.filter(isbn=isbn).exists():
             raise ValueError("A book with this ISBN already exists.")
+
         return cls.objects.create(
             title=title,
             author=author,
@@ -78,6 +75,8 @@ class Book(models.Model):
             rating=rating,
             review=review,
             genre=genre,
+            series=series,
+            user=user
         )
 
     def get_reviews(self):
@@ -136,3 +135,19 @@ class BookReview(models.Model):
 
         return recommendations
 
+
+class Collections(models.Model):
+    name = models.CharField(max_length=100)
+    books = models.ManyToManyField(Book, related_name='collections')
+    is_public = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def create_collection(cls, name, owner, is_public=True):
+        return cls.objects.create(name=name, owner=owner, is_public=is_public)
+
+    def add_book(self, book):
+        self.books.add(book)
