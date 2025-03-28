@@ -46,8 +46,8 @@
                     </div>
                     <div class="card-footer bg-transparent">
                         <a href="#" class="btn btn-outline-primary btn-sm">View</a>
-                        {% if user == collection.owner %}
-                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        {% if user == collection.owner or user_role == "Librarian" %}
+                            <a href="{% url 'bookcataloging:edit_collection' collection.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
                         {% endif %}
                     </div>
                 </div>

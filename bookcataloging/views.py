@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.http import HttpResponse
 from .models import UserProfile, Book, BookReview, Collections
@@ -16,6 +16,46 @@ def get_role(request):
 
     return user_role
 
+def edit_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    
+    # Check if user is owner or librarian
+    if request.user != collection.owner and user_role != "Librarian":
+        messages.error(request, "You don't have permission to edit this collection.")
+        return redirect('bookcataloging:collections')
+    
+    if request.method == 'POST':
+        if 'save_collection' in request.POST:
+            collection.name = request.POST.get('name')
+            collection.description = request.POST.get('description', '')
+            if user_role == "Librarian":
+                collection.is_public = request.POST.get('is_public') != 'on'
+            collection.save()
+            messages.success(request, 'Collection updated successfully!')
+            return redirect('bookcataloging:collections')
+    
+    context = {
+        'collection': collection,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/edit_collection.html', context)
+
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    
+    # Check if user is owner or librarian
+    if request.user != collection.owner and user_role != "Librarian":
+        messages.error(request, "You don't have permission to delete this collection.")
+        return redirect('bookcataloging:collections')
+    
+    if request.method == 'POST':
+        collection.delete()
+        messages.success(request, 'Collection deleted successfully!')
+        return redirect('bookcataloging:collections')
+    
+    return redirect('bookcataloging:collections')
 def add_collection(request):
     user_role = get_role(request)
     if not request.user.is_authenticated:

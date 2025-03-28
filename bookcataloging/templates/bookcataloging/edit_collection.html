@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Collection</title>
+    <meta name="author" content="Your Name">
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        {% include "bookcataloging/navbar.html" %}
+    </header>
+    <main class="container mt-4">
+        <h1>Edit Collection</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Collection Name</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       value="{{ collection.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" 
+                          rows="3">{{ collection.description }}</textarea>
+            </div>
+            {% if user_role == "Librarian" %}
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="is_public" name="is_public"
+                      {% if not collection.is_public %}checked{% endif %}>
+                <label class="form-check-label" for="is_public">
+                    Make collection private
+                </label>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="submit" name="save_collection" class="btn btn-primary">Save</button>
+                    <a href="{% url 'bookcataloging:collections' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                    Delete Collection
+                </button>
+            </div>
+        </form>
+        
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete "{{ collection.name }}" collection? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <form method="POST" action="{% url 'bookcataloging:delete_collection' collection.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS for modal functionality -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
