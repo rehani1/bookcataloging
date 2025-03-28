@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,81 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Aaron Park">
     <title>Book Collections</title>
-    <link rel="stylesheet" href="../static/bookcataloging/home.css">
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
         {% include "bookcataloging/navbar.html" %}
     </header>
-    <main class="container mt-4 mt-5">
-        <div class="text-center">
-            <h1 class="main-title">
-                Book Collections
-            </h1>
-            
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="main-title">Book Collections</h1>
             {% if user.is_authenticated %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Create New Collection</h5>
-                    <form method="post" action="{% url 'bookcataloging:collections' %}">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="collection_name" 
-                                   placeholder="Collection Name" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" name="collection_description" 
-                                      placeholder="Description (optional)"></textarea>
-                        </div>
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" name="is_public" id="is_public" checked>
-                            <label class="form-check-label" for="is_public">Make collection public</label>
-                        </div>
-                        <button type="submit" name="create_collection" class="btn btn-primary">
-                            Create Collection
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <a href="{% url 'bookcataloging:add_collection' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Collection
+            </a>
             {% endif %}
-            
-            <div class="row">
-                {% for collection in collections %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ collection.name }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                By {{ collection.owner.username }}
-                                {% if not collection.is_public %}
-                                    <span class="badge badge-secondary">Private</span>
-                                {% endif %}
-                            </h6>
-                            {% if collection.description %}
-                                <p class="card-text">{{ collection.description }}</p>
+        </div>
+
+        <div class="row">
+            {% for collection in collections %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ collection.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            By {{ collection.owner.username }}
+                            {% if not collection.is_public %}
+                                <span class="badge badge-secondary">Private</span>
                             {% endif %}
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    {{ collection.books.count }} book{{ collection.books.count|pluralize }}
-                                </small>
-                            </p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">View Collection</a>
-                            {% if user == collection.owner %}
-                                <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                            {% endif %}
-                        </div>
+                        </h6>
+                        {% if collection.description %}
+                            <p class="card-text">{{ collection.description|truncatechars:100 }}</p>
+                        {% endif %}
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {{ collection.books.count }} book{{ collection.books.count|pluralize }}
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#" class="btn btn-outline-primary btn-sm">View</a>
+                        {% if user == collection.owner %}
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        {% endif %}
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        No collections found. {% if user.is_authenticated %}Create one above!{% endif %}
-                    </div>
-                </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No collections found. {% if user.is_authenticated %}Create one!{% endif %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </main>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
