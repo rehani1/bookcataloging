@@ -40,7 +40,7 @@ class Book(models.Model):
     review = models.TextField()
     read_status = models.BooleanField()
     book_image = models.ImageField(upload_to='book_pics/', blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', null=True)
     series = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
