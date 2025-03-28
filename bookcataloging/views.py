@@ -237,6 +237,17 @@ def edit_profile_view(request):
     
     return render(request, 'bookcataloging/edit_profile.html', {'form': form})
 
+def home_view(request):
+    popular_books = []        
+    collections = []          
+    recommendations = []     
+    context = {
+        'popular_books': popular_books,
+        'collections': collections,
+        'recommendations': recommendations,
+    }
+    return render(request, 'bookcataloging/home.html', context)
+
 def book_recommendations(request):
     user = request.user
     recommendations = BookReview.get_book_recommendations(user)

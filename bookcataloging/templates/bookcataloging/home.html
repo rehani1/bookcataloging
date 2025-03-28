@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minimal Layout with Navbar</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .full-height {
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    {% include "bookcataloging/navbar.html" %}
+  </header>
+
+  <div class="container full-height">
+    <div class="row">
+      <div class="col text-center" style="margin-top: 50px;">
+        <h2>Popular Books</h2>
+        <p>Placeholder for popular books</p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 250px;">
+      <div class="col-md-6 text-center">
+        <h2>Community Collections</h2>
+        <p>Placeholder for collections</p>
+      </div>
+      <div class="col-md-6 text-center">
+        <h2>Recommendations</h2>
+        <p>Placeholder for recommendations</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

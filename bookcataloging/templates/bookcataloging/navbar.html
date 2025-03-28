@@ -6,29 +6,36 @@
     <form class="d-flex" role="search">
       {% if request.user.is_authenticated %}
       <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
-        Hello, {{ request.user.first_name|default:request.user.username }} | 
-        {% if user_role %}
-        {{ user_role }}
-      {% else %}
-        (No role assigned)
-      {% endif %}
-        </span>
-        {% else %}
-      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
-        Hello, Guest
+        Hello, {{ request.user.first_name|default:request.user.username }}{% if
+        user_role %} | {{ user_role }}{% else %} (No role assigned){% endif %}
       </span>
-      {% endif %}
       <a
-        href="{% url 'bookcataloging:book_recs' %}"
+        href="{% url 'bookcataloging:home' %}"
         class="btn nav-btn"
         style="margin-right: 12px; background-color: #ecf0f1"
-        >Recommendations</a
+        >Home</a
       >
       <a
         href="/accounts/logout/"
         class="btn nav-btn"
         style="margin-right: 12px; background-color: #ecf0f1"
         >Log Out</a
+      >
+      <a
+        href="{% url 'bookcataloging:profile' %}"
+        class="btn nav-btn"
+        style="background-color: #ecf0f1; margin-right: 12px"
+        >My Profile</a
+      >
+      {% else %}
+      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1"
+        >Hello, Guest</span
+      >
+      <a
+        href="{% url 'bookcataloging:home' %}"
+        class="btn nav-btn"
+        style="margin-right: 12px; background-color: #ecf0f1"
+        >Home</a
       >
       <a
         href="/accounts/google/login"
