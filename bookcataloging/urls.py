@@ -10,5 +10,9 @@ urlpatterns = [
     path('logout', LogoutView.as_view()),
     path('profile/', views.profile_view, name='profile'),
     path('search/', views.search_view, name='search'),
-    path("profile/edit/", views.edit_profile_view, name="edit_profile")
+    path("profile/edit/", views.edit_profile_view, name="edit_profile"),
+    path("collections/", views.collections_view, name="collections"),
+    path("collections/add/", views.add_collection, name='add_collection'),
+    path('collections/<int:collection_id>/edit/', views.edit_collection, name='edit_collection'),
+    path('collections/<int:collection_id>/delete/', views.delete_collection, name='delete_collection'),
 ]

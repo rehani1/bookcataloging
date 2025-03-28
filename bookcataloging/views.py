@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.http import HttpResponse
-from .models import UserProfile, Book, BookReview
+from .models import UserProfile, Book, BookReview, Collections
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
+from django.db import models
 
 def get_role(request):
     user_role = ''
@@ -14,6 +15,97 @@ def get_role(request):
             user_role = 'Patron'
 
     return user_role
+
+def edit_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    
+    if request.user != collection.owner and user_role != "Librarian":
+        return redirect('bookcataloging:collections')
+    
+    if request.method == 'POST': # edits the collection
+        if 'save_collection' in request.POST:
+            collection.name = request.POST.get('name')
+            collection.description = request.POST.get('description', '')
+            if user_role == "Librarian":
+                collection.is_public = request.POST.get('is_public') != 'on'
+            collection.save()
+            return redirect('bookcataloging:collections')
+    
+    context = {
+        'collection': collection,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/edit_collection.html', context)
+
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    
+    if request.user != collection.owner and user_role != "Librarian":
+        return redirect('bookcataloging:collections')
+    
+    if request.method == 'POST': # deletes the collection
+        collection.delete()
+        return redirect('bookcataloging:collections')
+    
+    return redirect('bookcataloging:collections')
+
+def add_collection(request):
+    user_role = get_role(request)
+    if not request.user.is_authenticated:
+        return redirect('bookcataloging:collections')
+    
+    if request.method == 'POST': # adds the collection
+        name = request.POST.get('name')
+        description = request.POST.get('description', '')
+        is_public = request.POST.get('is_public') == 'off'
+        
+        if name:
+            try:
+                Collections.objects.create(
+                    name=name,
+                    owner=request.user,
+                    is_public=is_public,
+                    description=description
+                )
+                return redirect('bookcataloging:collections')
+            except Exception as e:
+                print('error')
+    context = {
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/add_collection.html', context)
+
+def collections_view(request):
+    user_role = get_role(request)
+    
+    if request.method == 'POST' and 'create_collection' in request.POST:
+        name = request.POST.get('collection_name')
+        description = request.POST.get('collection_description', '')
+        is_public = request.POST.get('is_public') == 'on'
+        
+        if name and request.user.is_authenticated:
+            Collections.create_collection(
+                name=name,
+                owner=request.user,
+                is_public=is_public,
+                description=description
+            )
+            return redirect('bookcataloging:collections')
+    
+    if request.user.is_authenticated:
+        collections = Collections.objects.filter(
+            models.Q(is_public=True) | models.Q(owner=request.user)
+        ).distinct()
+    else:
+        collections = Collections.objects.filter(is_public=True)
+    
+    context = {
+        'user_role': user_role,
+        'collections': collections,
+    }
+    return render(request, 'bookcataloging/collections.html', context)
 
 def index_view(request):
     user_role = get_role(request)
