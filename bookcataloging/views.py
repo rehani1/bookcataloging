@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import HttpResponse
-from .models import UserProfile, Book, BookReview
+from .models import UserProfile, Book, BookReview, Collections
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
-
+from django.contrib import messages
+from django.db import models
 def get_role(request):
     user_role = ''
     if request.user.is_authenticated: 
@@ -14,6 +15,38 @@ def get_role(request):
             user_role = 'Patron'
 
     return user_role
+
+def collections_view(request):
+    user_role = get_role(request)
+    
+    if request.method == 'POST' and 'create_collection' in request.POST:
+        name = request.POST.get('collection_name')
+        description = request.POST.get('collection_description', '')
+        is_public = request.POST.get('is_public') == 'on'
+        
+        if name and request.user.is_authenticated:
+            Collections.create_collection(
+                name=name,
+                owner=request.user,
+                is_public=is_public,
+                description=description
+            )
+            messages.success(request, 'Collection created successfully!')
+            return redirect('bookcataloging:collections')
+    
+    # Get collections - public ones or those owned by the user
+    if request.user.is_authenticated:
+        collections = Collections.objects.filter(
+            models.Q(is_public=True) | models.Q(owner=request.user)
+        ).distinct()
+    else:
+        collections = Collections.objects.filter(is_public=True)
+    
+    context = {
+        'user_role': user_role,
+        'collections': collections,
+    }
+    return render(request, 'bookcataloging/collections.html', context)
 
 def index_view(request):
     user_role = get_role(request)

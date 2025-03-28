@@ -148,8 +148,13 @@ class Collections(models.Model):
         return self.name
 
     @classmethod
-    def create_collection(cls, name, owner, is_public=True):
-        return cls.objects.create(name=name, owner=owner, is_public=is_public)
+    def create_collection(cls, name, owner, is_public=True, description=None):
+        return cls.objects.create(
+            name=name,
+            owner=owner,
+            is_public=is_public,
+            description=description
+        )
 
     def add_book(self, book):
         self.books.add(book)
