@@ -17,13 +17,14 @@ def get_role(request):
     return user_role
 
 def add_collection(request):
+    user_role = get_role(request)
     if not request.user.is_authenticated:
         return redirect('bookcataloging:collections')
     
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description', '')
-        is_public = request.POST.get('is_public') == 'on'
+        is_public = request.POST.get('is_public') == 'off'
         
         if name:
             try:
@@ -37,8 +38,10 @@ def add_collection(request):
                 return redirect('bookcataloging:collections')
             except Exception as e:
                 messages.error(request, f'Error creating collection: {e}')
-    
-    return render(request, 'bookcataloging/add_collection.html')
+    context = {
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/add_collection.html', context)
 
 def collections_view(request):
     user_role = get_role(request)

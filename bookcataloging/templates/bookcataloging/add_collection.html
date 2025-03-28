@@ -25,12 +25,16 @@
                 <label for="description">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
             </div>
+            {% if user_role == "Librarian" %}
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" checked>
+                <input class="form-check-input" type="checkbox" id="is_public" name="is_public">
                 <label class="form-check-label" for="is_public">
-                    Make collection public
+                    Make collection private
                 </label>
             </div>
+            {% else %}
+                <input type="hidden" name="is_public" value="off"> 
+            {% endif %}
             <button type="submit" class="btn btn-primary">Create</button>
             <a href="{% url 'bookcataloging:collections' %}" class="btn btn-secondary">Cancel</a>
         </form>
