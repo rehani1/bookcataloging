@@ -37,7 +37,7 @@
         <h2>My Collections</h2>
           {% if my_collections %}
                 <ul>
-                    {% for book in my_collections %}
+                    {% for collection in my_collections %}
                         <li><strong>{{ collection.name }}</strong>
                         <p>{{ collection.description }}</p>
                         </li>
