@@ -148,18 +148,6 @@ def search_view(request):
     return render(request, 'bookcataloging/search.html', context)
 
 
-def book_recs(request):
-    popular_books = BookReview.get_popular_books()
-    recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
-    my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
-
-    return render(request, 'bookcataloging/home.html', {
-        'popular_books': popular_books,
-        'recommendations': recommendations,
-        'my_collections': my_collections
-    })
-
-
 def profile_view(request):
     if not request.user.is_authenticated:
         return render(request, "bookcataloging/guest_profile.html")
@@ -253,29 +241,15 @@ def edit_profile_view(request):
     
     return render(request, 'bookcataloging/edit_profile.html', {'form': form})
 
+
 def home_view(request):
-    popular_books = []        
-    collections = []          
-    recommendations = []     
+    popular_books = BookReview.get_popular_books()
+    recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
+    my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
+
     context = {
         'popular_books': popular_books,
-        'collections': collections,
+        'my_collections': my_collections,
         'recommendations': recommendations,
     }
     return render(request, 'bookcataloging/home.html', context)
-
-def book_recommendations(request):
-    user = request.user
-    recommendations = BookReview.get_book_recommendations(user)
-
-    author_recommendations = recommendations['author_recs']
-    genre_recommendations = recommendations['genre_recs']
-    general_recommendations = recommendations['general_recs']
-
-    return render(request, 'bookcataloging/book_recs.html', {
-        'author_recommendations': author_recommendations,
-        'genre_recommendations': genre_recommendations,
-        'general_recommendations': general_recommendations
-    })
-
-
