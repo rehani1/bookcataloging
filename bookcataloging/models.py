@@ -162,3 +162,8 @@ class Collections(models.Model):
 
     def add_book(self, book):
         self.books.add(book)
+
+
+    @classmethod
+    def get_my_collections(cls, user):
+        return Collections.objects.filter(owner=user)

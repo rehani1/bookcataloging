@@ -34,8 +34,18 @@
 
     <div class="row" style="margin-top: 250px;">
       <div class="col-md-6 text-center">
-        <h2>Community Collections</h2>
-        <p>Placeholder for collections</p>
+        <h2>My Collections</h2>
+          {% if my_collections %}
+                <ul>
+                    {% for book in my_collections %}
+                        <li><strong>{{ collection.name }}</strong>
+                        <p>{{ collection.description }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No collections available.</p>
+            {% endif %}
       </div>
         <div class="col-md-6 text-center">
             <h2>Recommendations</h2>

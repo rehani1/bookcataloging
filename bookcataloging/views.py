@@ -151,10 +151,12 @@ def search_view(request):
 def book_recs(request):
     popular_books = BookReview.get_popular_books()
     recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
+    my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
 
-    return render(request, 'home.html', {
+    return render(request, 'homepage.html', {
         'popular_books': popular_books,
-        'recommendations': recommendations
+        'recommendations': recommendations,
+        'my_collections': my_collections
     })
 
 
