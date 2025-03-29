@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
 
+
 def get_role(request):
     user_role = ''
     if request.user.is_authenticated: 
@@ -15,6 +16,7 @@ def get_role(request):
             user_role = 'Patron'
 
     return user_role
+
 
 def edit_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
@@ -38,6 +40,7 @@ def edit_collection(request, collection_id):
     }
     return render(request, 'bookcataloging/edit_collection.html', context)
 
+
 def delete_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
@@ -50,6 +53,7 @@ def delete_collection(request, collection_id):
         return redirect('bookcataloging:collections')
     
     return redirect('bookcataloging:collections')
+
 
 def add_collection(request):
     user_role = get_role(request)
@@ -76,6 +80,7 @@ def add_collection(request):
         'user_role': user_role,
     }
     return render(request, 'bookcataloging/add_collection.html', context)
+
 
 def collections_view(request):
     user_role = get_role(request)
@@ -107,9 +112,11 @@ def collections_view(request):
     }
     return render(request, 'bookcataloging/collections.html', context)
 
+
 def index_view(request):
     user_role = get_role(request)
     return render(request, 'bookcataloging/index.html', {'user_role': user_role})
+
 
 def search_view(request):
     user_role = get_role(request)
@@ -140,9 +147,16 @@ def search_view(request):
     }
     return render(request, 'bookcataloging/search.html', context)
 
-def book_recs(request): 
-    user_role = get_role(request)
-    return render(request, 'bookcataloging/book_recs.html', {'user_role': user_role})
+
+def book_recs(request):
+    popular_books = BookReview.get_popular_books()
+    recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
+
+    return render(request, 'home.html', {
+        'popular_books': popular_books,
+        'recommendations': recommendations
+    })
+
 
 def profile_view(request):
     if not request.user.is_authenticated:

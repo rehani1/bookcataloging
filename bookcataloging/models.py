@@ -103,6 +103,18 @@ class BookReview(models.Model):
         return f"Review by {self.user.username} for {self.book.title}"
 
     @classmethod
+    def get_popular_books(cls):
+        popular_books = Book.objects.filter(
+            bookreview__rating__gte=4
+        ).annotate(
+            num_ratings=Count('bookreview')
+        ).filter(
+            num_ratings__gte=3
+        )
+
+        return popular_books
+
+    @classmethod
     def get_book_recommendations(cls, user):
         books_by_fav_authors = Book.objects.filter(
             id__in=cls.objects.filter(
@@ -124,15 +136,7 @@ class BookReview(models.Model):
             ).filter(num_reads__gte=5).values('book__genre')
         ).filter(rating__gte=4)
 
-        popular_books = Book.objects.filter(
-            bookreview__rating__gte=4
-        ).annotate(
-            num_ratings=Count('bookreview')
-        ).filter(
-            num_ratings__gte=3
-        )
-
-        recommendations = set(books_by_fav_authors) | set(books_by_genre) | set(popular_books)
+        recommendations = set(books_by_fav_authors) | set(books_by_genre)
 
         return recommendations
 
