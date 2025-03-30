@@ -100,9 +100,12 @@ def collections_view(request):
             return redirect('bookcataloging:collections')
     
     if request.user.is_authenticated:
-        collections = Collections.objects.filter(
-            models.Q(is_public=True) | models.Q(owner=request.user)
-        ).distinct()
+        if user_role == "Librarian":
+            collections = Collections.objects.all()
+        else:
+            collections = Collections.objects.filter(
+                models.Q(is_public=True) | models.Q(owner=request.user)
+            ).distinct()
     else:
         collections = Collections.objects.filter(is_public=True)
     
