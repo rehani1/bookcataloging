@@ -20,9 +20,7 @@ def get_role(request):
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
-    
-    if request.user != collection.owner and user_role != "Librarian":
-        return redirect('bookcataloging:collections')
+
     
     context = {
         'collection': collection,
@@ -140,6 +138,21 @@ def delete_collection(request, collection_id):
         return redirect('bookcataloging:collections')
     
     return redirect('bookcataloging:collections')
+
+#This functionality may/may not work yet
+@login_required
+def add_book(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+
+    if request.method == 'POST':
+        book_ids = request.POST.getlist('books')  
+        books = Book.objects.filter(id__in=book_ids)  
+        collection.books.add(*books) 
+        return redirect('bookcataloging:view_collection', collection_id=collection.id)
+
+    available_books = Book.objects.exclude(collections=collection) 
+    return render(request, 'bookcataloging/add_book.html', {'collection': collection, 'available_books': available_books})
+
 def index_view(request):
     user_role = get_role(request)
     return render(request, 'bookcataloging/index.html', {'user_role': user_role})

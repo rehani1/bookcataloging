@@ -4,7 +4,10 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import Book, BookReview, UserProfile, Collections
 
+class CollectionsAdmin(admin.ModelAdmin):
+    filter_horizontal = ('books',) 
+
 admin.site.register(Book)
 admin.site.register(BookReview)
 admin.site.register(UserProfile)
-admin.site.register(Collections)
+admin.site.register(Collections, CollectionsAdmin)
