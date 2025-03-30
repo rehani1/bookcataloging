@@ -20,8 +20,6 @@ def get_role(request):
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
-
-    
     context = {
         'collection': collection,
         'user_role': user_role,
