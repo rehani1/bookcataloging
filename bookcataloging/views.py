@@ -124,32 +124,28 @@ def collections_view(request):
     }
     return render(request, 'bookcataloging/collections.html', context)
 
-def delete_collection(request, collection_id):
+def delete_book_from_collection(request, collection_id, book_id):
     collection = get_object_or_404(Collections, id=collection_id)
-    user_role = get_role(request)
+    book = get_object_or_404(Book, id=book_id)
+    user_role = get_role(request)  
     
     if request.user != collection.owner and user_role != "Librarian":
-        return redirect('bookcataloging:collections')
-    
-    if request.method == 'POST': # deletes the collection
-        collection.delete()
-        return redirect('bookcataloging:collections')
-    
-    return redirect('bookcataloging:collections')
+        return redirect('bookcataloging:view_collection', collection_id=collection.id)
 
-#This functionality may/may not work yet
-@login_required
-def add_book(request, collection_id):
+    collection.books.remove(book)
+    return redirect('bookcataloging:view_collection', collection_id=collection.id)
+
+def add_book_to_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
 
     if request.method == 'POST':
         book_ids = request.POST.getlist('books')  
         books = Book.objects.filter(id__in=book_ids)  
         collection.books.add(*books) 
-        return redirect('bookcataloging:view_collection', collection_id=collection.id)
-
+        return redirect('bookcataloging:view_collection', collection_id=collection.id) 
     available_books = Book.objects.exclude(collections=collection) 
-    return render(request, 'bookcataloging/add_book.html', {'collection': collection, 'available_books': available_books})
+    return render(request, 'bookcataloging/add_book_to_collection.html', {'collection': collection, 'available_books': available_books})
+
 
 def index_view(request):
     user_role = get_role(request)
