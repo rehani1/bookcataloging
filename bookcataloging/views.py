@@ -140,10 +140,14 @@ def add_book_to_collection(request, collection_id):
 
     if request.method == 'POST':
         book_ids = request.POST.getlist('books')  
-        books = Book.objects.filter(id__in=book_ids)  
-        collection.books.add(*books) 
-        return redirect('bookcataloging:view_collection', collection_id=collection.id) 
-    available_books = Book.objects.exclude(collections=collection) 
+        books = Book.objects.filter(id__in=book_ids)
+
+        private_books = books.filter(collections__is_public=False).distinct()
+        if not private_books.exists():
+            collection.books.add(*books)
+            return redirect('bookcataloging:view_collection', collection_id=collection.id)
+    private_book_ids = Book.objects.filter(collections__is_public=False).values_list('id', flat=True)
+    available_books = Book.objects.exclude(id__in=private_book_ids)
     return render(request, 'bookcataloging/add_book_to_collection.html', {'collection': collection, 'available_books': available_books})
 
 
