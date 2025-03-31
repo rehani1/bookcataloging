@@ -109,20 +109,19 @@ def collections_view(request):
             return redirect('bookcataloging:collections')
     
     if request.user.is_authenticated:
-        if user_role == "Librarian":
-            collections = Collections.objects.all()
-        else:
-            collections = Collections.objects.filter(
-                models.Q(is_public=True) | models.Q(owner=request.user)
-            ).distinct()
+        collections = Collections.objects.all()
     else:
         collections = Collections.objects.filter(is_public=True)
-    
     context = {
         'user_role': user_role,
         'collections': collections,
     }
     return render(request, 'bookcataloging/collections.html', context)
+
+def request_access_to_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    # test
+    return redirect('bookcataloging:collections')
 
 def delete_book_from_collection(request, collection_id, book_id):
     collection = get_object_or_404(Collections, id=collection_id)
