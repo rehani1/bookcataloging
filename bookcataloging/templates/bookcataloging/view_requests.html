@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Requests</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        {% include "bookcataloging/navbar.html" %}
+    </header>
+    <main class="container mt-4">
+        <h1>Pending Requests</h1>
+        {% if pending_requests %}
+        <div class="list-group">
+            {% for request in pending_requests %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1">Request by: <strong>{{ request.user.username }}</strong> for collection:
+                        <strong>{{request.collection.name }}</strong></p>
+                </div>
+                <div>
+                    <a href="{% url 'bookcataloging:approve_request' request.id %}"
+                        class="btn btn-success btn-sm">Approve</a>
+                    <form action="{% url 'bookcataloging:delete_request' request.id %}" method="post"
+                        style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No pending requests at this time.</p>
+        {% endif %}
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -18,4 +18,8 @@ urlpatterns = [
     path('collections/<int:collection_id>/view/', views.view_collection, name='view_collection'),
     path('collections/<int:collection_id>/add_book_to_collection/', views.add_book_to_collection, name='add_book_to_collection'),
     path('collections/<int:collection_id>/delete_book_from_collection/<int:book_id>/', views.delete_book_from_collection, name='delete_book_from_collection'),
+    path('collections/request/<int:collection_id>/', views.request_collection, name='request_collection'),  # Request access to collection
+    path('requests/view/', views.view_requests, name='view_requests'),  # View all requests
+    path('requests/approve/<int:request_id>/', views.approve_request, name='approve_request'),  # Approve a request
+    path('requests/delete/<int:request_id>/', views.delete_request, name='delete_request'),  # Deny a request
 ]

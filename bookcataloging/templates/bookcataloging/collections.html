@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <header>
         {% include "bookcataloging/navbar.html" %}
@@ -32,11 +34,11 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             By {{ collection.owner.username }}
                             {% if not collection.is_public %}
-                                <span class="badge badge-secondary">Private</span>
+                            <span class="badge badge-secondary">Private</span>
                             {% endif %}
                         </h6>
                         {% if collection.description %}
-                            <p class="card-text">{{ collection.description|truncatechars:100 }}</p>
+                        <p class="card-text">{{ collection.description|truncatechars:100 }}</p>
                         {% endif %}
                         <p class="card-text">
                             <small class="text-muted">
@@ -46,12 +48,23 @@
                     </div>
                     <div class="card-footer bg-transparent">
                         {% if collection.is_public or user_role == "Librarian" or user == collection.owner %}
-                            <a href="{% url 'bookcataloging:view_collection' collection.id %}" class="btn btn-outline-primary btn-sm">View</a>
+                        <a href="{% url 'bookcataloging:view_collection' collection.id %}"
+                            class="btn btn-outline-primary btn-sm">View</a>
                         {% elif user_role == "Patron" %}
-                            <a href="#" class="btn btn-outline-primary btn-sm">Request</a>
+                        {% if request.user in collection.approved_users.all %}
+                        <a href="{% url 'bookcataloging:view_collection' collection.id %}"
+                            class="btn btn-outline-primary btn-sm">View</a>
+                        {% else %}
+                        <form action="{% url 'bookcataloging:request_collection' collection.id %}" method="post"
+                            style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Request</button>
+                        </form>
+                        {% endif %}
                         {% endif %}
                         {% if user_role == "Librarian" or user == collection.owner %}
-                            <a href="{% url 'bookcataloging:edit_collection' collection.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <a href="{% url 'bookcataloging:edit_collection' collection.id %}"
+                            class="btn btn-outline-secondary btn-sm">Edit</a>
                         {% endif %}
                     </div>
                 </div>
@@ -63,10 +76,11 @@
                 </div>
             </div>
             {% endfor %}
- 
+
         </div>
     </main>
-    
+
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
+
 </html>
