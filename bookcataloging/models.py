@@ -147,6 +147,7 @@ class Collections(models.Model):
     is_public = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
     description = models.TextField(blank=True, null=True)
+    approved_users = models.ManyToManyField(User, related_name='approved_collections', blank=True)
 
     def __str__(self):
         return self.name
@@ -157,7 +158,8 @@ class Collections(models.Model):
             name=name,
             owner=owner,
             is_public=is_public,
-            description=description
+            description=description,
+            approved_users=approved_users
         )
 
     def add_book(self, book):
@@ -167,3 +169,11 @@ class Collections(models.Model):
     @classmethod
     def get_my_collections(cls, user):
         return Collections.objects.filter(owner=user)
+
+class Request(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    collection = models.ForeignKey(Collections, on_delete=models.CASCADE)
+    is_approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.user.username} requested access to {self.collection.name}"
