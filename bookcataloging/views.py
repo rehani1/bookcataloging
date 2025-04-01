@@ -33,8 +33,13 @@ def request_collection(request, collection_id):
     return redirect('bookcataloging:collections')
 
 def view_requests(request):
+    user_role = get_role(request)
     pending_requests = Request.objects.filter(is_approved=False).select_related('user', 'collection')
-    return render(request, 'bookcataloging/view_requests.html', {'pending_requests': pending_requests})
+    context = {
+        'pending_requests': pending_requests,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/view_requests.html', context)
 
 def approve_request(request, request_id):
     req = get_object_or_404(Request, id=request_id)
