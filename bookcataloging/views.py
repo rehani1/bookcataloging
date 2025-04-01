@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.http import HttpResponse
-from .models import UserProfile, Book, BookReview, Collections
+from .models import UserProfile, Book, BookReview, Collections, Request
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
@@ -26,6 +26,38 @@ def view_collection(request, collection_id):
     }
     return render(request, 'bookcataloging/view_collection.html', context)
 
+def request_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    if request.user.is_authenticated:
+        Request.objects.get_or_create(user=request.user, collection=collection)
+    return redirect('bookcataloging:collections')
+
+def view_requests(request):
+    user_role = get_role(request)
+    pending_requests = Request.objects.filter(is_approved=False).select_related('user', 'collection')
+    context = {
+        'pending_requests': pending_requests,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/view_requests.html', context)
+
+def approve_request(request, request_id):
+    req = get_object_or_404(Request, id=request_id)
+    req.is_approved = True
+    req.save()
+
+    req.collection.approved_users.add(req.user)
+    req.collection.save()
+    
+    req.delete()
+
+    return redirect('bookcataloging:view_requests')
+
+def delete_request(request, request_id):
+    req = get_object_or_404(Request, id=request_id)
+    req.delete()
+    
+    return redirect('bookcataloging:view_requests')
 
 def edit_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
@@ -109,20 +141,19 @@ def collections_view(request):
             return redirect('bookcataloging:collections')
     
     if request.user.is_authenticated:
-        if user_role == "Librarian":
-            collections = Collections.objects.all()
-        else:
-            collections = Collections.objects.filter(
-                models.Q(is_public=True) | models.Q(owner=request.user)
-            ).distinct()
+        collections = Collections.objects.all()
     else:
         collections = Collections.objects.filter(is_public=True)
-    
     context = {
         'user_role': user_role,
         'collections': collections,
     }
     return render(request, 'bookcataloging/collections.html', context)
+
+def request_access_to_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    # test
+    return redirect('bookcataloging:collections')
 
 def delete_book_from_collection(request, collection_id, book_id):
     collection = get_object_or_404(Collections, id=collection_id)

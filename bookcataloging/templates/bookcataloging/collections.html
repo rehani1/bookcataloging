@@ -1,14 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Aaron Park">
     <title>Book Collections</title>
-    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link rel="stylesheet" href="../static/bookcataloging/home.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <header>
         {% include "bookcataloging/navbar.html" %}
@@ -17,12 +19,18 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="main-title">Book Collections</h1>
             {% if user.is_authenticated %}
-            <a href="{% url 'bookcataloging:add_collection' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add Collection
-            </a>
+            <div class="d-flex">
+                <a href="{% url 'bookcataloging:add_collection' %}" class="btn btn-primary mr-2">
+                    <i class="fas fa-plus"></i> Add Collection
+                </a>
+                {% if user_role == "Librarian" %}
+                <a href="{% url 'bookcataloging:view_requests' %}" class="btn btn-primary">
+                    View Requests
+                </a>
+                {% endif %}
+            </div>
             {% endif %}
         </div>
-
         <div class="row">
             {% for collection in collections %}
             <div class="col-md-4 mb-4">
@@ -32,11 +40,11 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             By {{ collection.owner.username }}
                             {% if not collection.is_public %}
-                                <span class="badge badge-secondary">Private</span>
+                            <span class="badge badge-secondary">Private</span>
                             {% endif %}
                         </h6>
                         {% if collection.description %}
-                            <p class="card-text">{{ collection.description|truncatechars:100 }}</p>
+                        <p class="card-text">{{ collection.description|truncatechars:100 }}</p>
                         {% endif %}
                         <p class="card-text">
                             <small class="text-muted">
@@ -45,9 +53,24 @@
                         </p>
                     </div>
                     <div class="card-footer bg-transparent">
-                        <a href="{% url 'bookcataloging:view_collection' collection.id %}" class="btn btn-outline-primary btn-sm">View</a>
-                        {% if user == collection.owner or user_role == "Librarian" %}
-                            <a href="{% url 'bookcataloging:edit_collection' collection.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        {% if collection.is_public or user_role == "Librarian" or user == collection.owner %}
+                        <a href="{% url 'bookcataloging:view_collection' collection.id %}"
+                            class="btn btn-outline-primary btn-sm">View</a>
+                        {% elif user_role == "Patron" %}
+                        {% if request.user in collection.approved_users.all %}
+                        <a href="{% url 'bookcataloging:view_collection' collection.id %}"
+                            class="btn btn-outline-primary btn-sm">View</a>
+                        {% else %}
+                        <form action="{% url 'bookcataloging:request_collection' collection.id %}" method="post"
+                            style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Request</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                        {% if user_role == "Librarian" or user == collection.owner %}
+                        <a href="{% url 'bookcataloging:edit_collection' collection.id %}"
+                            class="btn btn-outline-secondary btn-sm">Edit</a>
                         {% endif %}
                     </div>
                 </div>
@@ -61,7 +84,7 @@
             {% endfor %}
         </div>
     </main>
-    
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
+
 </html>
