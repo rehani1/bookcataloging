@@ -17,6 +17,8 @@ class UserProfile(models.Model):
     books_read = models.PositiveIntegerField(default=0)
     pages_read = models.PositiveIntegerField(default=0)
     friends = models.PositiveIntegerField(default=0)
+    # TODO: fix so that a User can see their checked out books
+    # checked_out_books = models.ManyToManyField(Book, related_name='checked_out_books')
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -43,6 +45,9 @@ class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', null=True)
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
+    checked_out = False
+    # TODO: fix so that each book stores info about which user currently checked out the book
+    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -87,6 +92,11 @@ class Book(models.Model):
         reviews = self.bookreview_set.all()
         total_rating = sum([review.rating for review in reviews if review.rating is not None])
         return total_rating / len(reviews) if reviews else None
+
+    def check_out_book(self, user):
+        # TODO: fix to check out a book
+        self.checked_out = True
+        self.checked_out_by = user
 
 
 class BookReview(models.Model):
@@ -153,7 +163,7 @@ class Collections(models.Model):
         return self.name
 
     @classmethod
-    def create_collection(cls, name, owner, is_public=True, description=None):
+    def create_collection(cls, name, owner, approved_users, is_public=True, description=None):
         return cls.objects.create(
             name=name,
             owner=owner,
