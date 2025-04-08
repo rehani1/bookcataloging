@@ -46,8 +46,8 @@ class Book(models.Model):
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     checked_out = False
-    # TODO: fix so that each book stores info about which user currently checked out the book
-    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    # TODO: fix so that each book stores info about which user currently checked out the book; default to None
+    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=None)
 
     def __str__(self):
         return self.title
@@ -97,6 +97,15 @@ class Book(models.Model):
         # TODO: fix to check out a book
         self.checked_out = True
         self.checked_out_by = user
+
+    def return_book(self):
+        # TODO: fix to return a book
+        self.checked_out = False
+        self.checked_out_by = None
+
+    @classmethod
+    def get_checked_out_books_by_user(cls, user):
+        return cls.objects.filter(user=user)
 
 
 class BookReview(models.Model):

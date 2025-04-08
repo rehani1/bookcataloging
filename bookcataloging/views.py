@@ -322,3 +322,9 @@ def home_view(request):
         'recommendations': recommendations,
     }
     return render(request, 'bookcataloging/home.html', context)
+
+
+def check_out_book(request):
+    Book.check_out_book(user=request.user) # TODO: finish once method is fixed
+    # TODO: add a success message?? and/or redirect to page for checked out books
+    return render(request, 'bookcataloging/home.html') # temp redirect to home until checkout page complete
