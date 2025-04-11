@@ -322,3 +322,25 @@ def home_view(request):
         'recommendations': recommendations,
     }
     return render(request, 'bookcataloging/home.html', context)
+
+
+@login_required
+def check_out_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if not book.checked_out:
+        book.check_out_book(user=request.user)
+    return redirect('bookcataloging/checked_out_books.html')
+
+
+@login_required
+def return_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if book.checked_out and book.checked_out_by == request.user:
+        book.return_book()
+    return redirect('bookcataloging/checked_out_books.html')
+
+
+@login_required
+def checked_out_books(request):
+    books = Book.get_checked_out_books_by_user(request.user)
+    return render(request, 'bookcataloging/checked_out_books.html', {'books': books})
