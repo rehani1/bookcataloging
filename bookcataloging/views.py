@@ -26,6 +26,14 @@ def view_collection(request, collection_id):
     }
     return render(request, 'bookcataloging/view_collection.html', context)
 
+def view_users(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    context = {
+        'collection': collection,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/view_users.html', context)
 def request_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     if request.user.is_authenticated:

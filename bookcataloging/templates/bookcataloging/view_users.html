@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        {% include "bookcataloging/navbar.html" %}
+    </header>
+    <h1>Users in {{ collection.name }}</h1>
+    <div class="row">
+        <div class="row">
+            {# Display the collection owner as a user card #}
+            <div class="col-md-2 mb-2">
+                <div class="card">
+                    <img src="{% if collection.owner.profile_picture %}{{ collection.owner.profile_picture.url }}{% else %}
+                        https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg
+                        {% endif %}" class="card-img-top" alt="Owner Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ collection.owner.username }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ collection.owner.first_name }}
+                            {{collection.owner.last_name }}</h6>
+                    </div>
+                </div>
+            </div>
+
+            {% for user in collection.approved_users.all %}
+            <div class="col-md-2 mb-2">
+                <div class="card">
+                    <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}
+                    https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg
+                    {% endif %}" class="card-img-top" alt="User Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ user.first_name }} {{ user.last_name }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            No users in this collection.
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="text-center my-4">
+        <a href="{% url 'bookcataloging:view_collection' collection.id %}" class="btn btn-primary">Back
+            to Collection</a>
+    </div>
+</body>
+
+</html>
