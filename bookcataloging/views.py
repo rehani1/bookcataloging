@@ -329,7 +329,7 @@ def check_out_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if not book.checked_out:
         book.check_out_book(user=request.user)
-    return redirect('checked_out_books')
+    return redirect('bookcataloging:checked_out_books')
 
 
 @login_required
@@ -337,7 +337,7 @@ def return_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if book.checked_out and book.checked_out_by == request.user:
         book.return_book()
-    return redirect('checked_out_books')
+    return redirect('bookcataloging:checked_out_books')
 
 
 @login_required
