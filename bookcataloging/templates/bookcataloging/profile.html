@@ -31,6 +31,8 @@
       </div>
     </form>
     <h1 class="mt-3">{{profile.user.first_name}} {{profile.user.last_name}}</h1>
+    <p><strong>Email:</strong> {{ profile.user.email }}</p>
+    <p><strong>Date Joined:</strong> {{ profile.user.date_joined|date:"F j, Y" }}</p>
     <p class="lead">{{ profile.description }}</p>
     <p1><em>{{ profile.quote }}</em></p1>
   </div>
