@@ -324,7 +324,23 @@ def home_view(request):
     return render(request, 'bookcataloging/home.html', context)
 
 
-def check_out_book(request):
-    Book.check_out_book(user=request.user) # TODO: finish once method is fixed
-    # TODO: add a success message?? and/or redirect to page for checked out books
-    return render(request, 'bookcataloging/home.html') # temp redirect to home until checkout page complete
+@login_required
+def check_out_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if not book.checked_out:
+        book.check_out_book(user=request.user)
+    return redirect('bookcataloging/checked_out_books.html')
+
+
+@login_required
+def return_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if book.checked_out and book.checked_out_by == request.user:
+        book.return_book()
+    return redirect('bookcataloging/checked_out_books.html')
+
+
+@login_required
+def checked_out_books(request):
+    books = Book.get_checked_out_books_by_user(request.user)
+    return render(request, 'bookcataloging/checked_out_books.html', {'books': books})

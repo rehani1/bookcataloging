@@ -45,9 +45,9 @@ class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', null=True)
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
-    checked_out = False
+    checked_out = models.BooleanField(default=False)
     # TODO: fix so that each book stores info about which user currently checked out the book; default to None
-    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=None)
+    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='checked_out_books')
 
     def __str__(self):
         return self.title
@@ -94,18 +94,19 @@ class Book(models.Model):
         return total_rating / len(reviews) if reviews else None
 
     def check_out_book(self, user):
-        # TODO: fix to check out a book
-        self.checked_out = True
-        self.checked_out_by = user
+        if not self.checked_out:
+            self.checked_out = True
+            self.checked_out_by = user
+            self.save()
 
     def return_book(self):
-        # TODO: fix to return a book
         self.checked_out = False
         self.checked_out_by = None
+        self.save()
 
     @classmethod
     def get_checked_out_books_by_user(cls, user):
-        return cls.objects.filter(user=user)
+        return cls.objects.filter(checked_out_by=user)
 
 
 class BookReview(models.Model):

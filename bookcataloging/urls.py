@@ -22,4 +22,7 @@ urlpatterns = [
     path('requests/view/', views.view_requests, name='view_requests'),  # View all requests
     path('requests/approve/<int:request_id>/', views.approve_request, name='approve_request'),  # Approve a request
     path('requests/delete/<int:request_id>/', views.delete_request, name='delete_request'),  # Deny a request
+    path('books/<int:book_id>/check_out/', views.check_out_book, name='check_out_book'),
+    path('books/<int:book_id>/return/', views.return_book, name='return_book'),
+    path('checked_out/', views.checked_out_books, name='checked_out_books'),
 ]
