@@ -44,7 +44,7 @@ class Book(models.Model):
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     checked_out = models.BooleanField(default=False)
-    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='checked_out_books')
+    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True , related_name='checked_out_books')
 
     def __str__(self):
         return self.title
