@@ -17,8 +17,6 @@ class UserProfile(models.Model):
     books_read = models.PositiveIntegerField(default=0)
     pages_read = models.PositiveIntegerField(default=0)
     friends = models.PositiveIntegerField(default=0)
-    # TODO: fix so that a User can see their checked out books
-    # checked_out_books = models.ManyToManyField(Book, related_name='checked_out_books')
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -46,7 +44,6 @@ class Book(models.Model):
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     checked_out = models.BooleanField(default=False)
-    # TODO: fix so that each book stores info about which user currently checked out the book; default to None
     checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='checked_out_books')
 
     def __str__(self):
