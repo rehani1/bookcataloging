@@ -16,12 +16,8 @@
   </header>
   <div class="container text-left my-4">
     <div class="d-flex justify-content-end mb-3">
-      <a
-          href="{% url 'bookcataloging:edit_profile' %}"
-          class="btn btn-secondary"
-          >Edit Profile</a
-        >
-      </div>
+      <a href="{% url 'bookcataloging:edit_profile' %}" class="btn btn-secondary">Edit Profile</a>
+    </div>
     <form method="POST" enctype="multipart/form-data" id="profile-pic-form">
       {% csrf_token %}
       <div>
@@ -29,10 +25,9 @@
           src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}
           {% else %}
           https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg{% endif %}"
-          width="200" height="200" class="bordered-image rounded-circle" alt="Profile Picture" id="profile-pic-preview"
-          onclick="document.getElementById('id_profile_picture').click()" />
-        <input type="file" name="profile_picture" id="id_profile_picture" accept="image/*" style="display: none;"
-          onchange="submitForm()">
+          width="200" height="200" class="bordered-image rounded-circle" alt="Profile Picture"
+          id="profile-pic-preview" />
+
       </div>
     </form>
     <h1 class="mt-3">{{profile.user.first_name}} {{profile.user.last_name}}</h1>
