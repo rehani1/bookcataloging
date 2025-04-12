@@ -26,4 +26,5 @@ urlpatterns = [
     path('books/check_out/<int:book_id>/', views.check_out_book, name='check_out_book'),
     path('books/return/<int:book_id>/', views.return_book, name='return_book'),
     path('checked_out/', views.checked_out_books, name='checked_out_books'),
+    path('add_book/', views.add_book, name="add_book" ),
 ]

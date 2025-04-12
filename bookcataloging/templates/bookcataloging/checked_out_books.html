@@ -33,7 +33,7 @@
                         <p class="card-text"><strong>Review:</strong> {{ book.review }}</p>
                         {% endif %}
 
-                        <form action="{% url 'return_book' book.id %}" method="post">
+                        <form action="{% url 'bookcataloging:return_book' book.id %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-warning">Return</button>
                         </form>
