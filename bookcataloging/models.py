@@ -43,6 +43,8 @@ class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', null=True)
     series = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
+    checked_out = models.BooleanField(default=False)
+    checked_out_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True , related_name='checked_out_books')
 
     def __str__(self):
         return self.title
@@ -87,6 +89,21 @@ class Book(models.Model):
         reviews = self.bookreview_set.all()
         total_rating = sum([review.rating for review in reviews if review.rating is not None])
         return total_rating / len(reviews) if reviews else None
+
+    def check_out_book(self, user):
+        if not self.checked_out:
+            self.checked_out = True
+            self.checked_out_by = user
+            self.save()
+
+    def return_book(self):
+        self.checked_out = False
+        self.checked_out_by = None
+        self.save()
+
+    @classmethod
+    def get_checked_out_books_by_user(cls, user):
+        return cls.objects.filter(checked_out_by=user)
 
 
 class BookReview(models.Model):
@@ -153,7 +170,7 @@ class Collections(models.Model):
         return self.name
 
     @classmethod
-    def create_collection(cls, name, owner, is_public=True, description=None):
+    def create_collection(cls, name, owner, approved_users, is_public=True, description=None):
         return cls.objects.create(
             name=name,
             owner=owner,

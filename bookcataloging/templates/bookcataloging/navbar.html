@@ -22,18 +22,37 @@
       <a href="{% url 'bookcataloging:profile' %}" class="btn nav-btn"
         style="background-color: #ecf0f1; margin-right: 12px">My Profile</a>
       {% else %}
-      <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
-        Hello, Guest
-      </span>
-      <a href="{% url 'bookcataloging:home' %}" class="btn nav-btn"
-        style="margin-right: 12px; background-color: #ecf0f1">Home</a>
-      <a href="{% url 'bookcataloging:collections' %}" class="btn nav-btn"
-        style="background-color: #ecf0f1; margin-right: 12px">Collections</a>
-      <a href="{% provider_login_url 'google' %}" class="btn nav-btn"
-        style="background-color: #ecf0f1; margin-right: 12px">Log In</a>
-      <a href="/accounts/signup/" class="btn nav-btn" style="margin-right: 12px; background-color: #ecf0f1">Sign Up</a>
-      <a href="{% url 'bookcataloging:profile' %}" class="btn nav-btn"
-        style="background-color: #ecf0f1; margin-right: 12px">My Profile</a>
+        <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
+          Hello, Guest
+        </span>
+        <a
+          href="{% url 'bookcataloging:home' %}"
+          class="btn nav-btn"
+          style="margin-right: 12px; background-color: #ecf0f1"
+        >Home</a>
+        <a
+          href="{% url 'bookcataloging:collections' %}"
+          class="btn nav-btn"
+          style="background-color: #ecf0f1; margin-right: 12px"
+        >Collections</a>
+        <a href="{% url 'bookcataloging:checked_out_books' %}" class="btn nav-btn"
+        style="background-color: #ecf0f1; margin-right: 12px"
+        >My Checked Out Books</a>
+        <a
+          href="{% provider_login_url 'google' %}"
+          class="btn nav-btn"
+          style="background-color: #ecf0f1; margin-right: 12px"
+        >Log In</a>
+        <a
+          href="/accounts/signup/"
+          class="btn nav-btn"
+          style="margin-right: 12px; background-color: #ecf0f1"
+        >Sign Up</a>
+        <a
+          href="{% url 'bookcataloging:profile' %}"
+          class="btn nav-btn"
+          style="background-color: #ecf0f1; margin-right: 12px"
+        >My Profile</a>
       {% endif %}
     </form>
   </div>

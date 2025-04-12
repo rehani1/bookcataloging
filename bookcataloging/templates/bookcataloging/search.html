@@ -56,12 +56,28 @@
                                 <strong>Genre:</strong> {{ book.genre }}<br>
                                 <strong>Rating:</strong> {{ book.rating|default:"Not rated" }}<br>
                                 <strong>ISBN:</strong> {{ book.isbn }}<br>
-                                <strong>Read Status:</strong> {{ book.read_status|yesno:"Read,Not Read" }}
+                                <strong>Read Status:</strong> {{ book.read_status|yesno:"Read,Not Read" }}<br>
+                                <strong>Checked Out</strong> {{ book.checked_out|yesno:"Yes,No" }}
                             </p>
                             {% if book.review %}
                             <p class="card-text">
                                 <strong>Review:</strong> {{ book.review }}
                             </p>
+                            {% endif %}
+                            {% if book.checked_out %}
+                                {% if book.checked_out_by == user %}
+                                    <form action="{% url 'bookcataloging:return_book' book.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-warning">Return</button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-danger">Checked out by another user</span>
+                                {% endif %}
+                            {% else %}
+                                <form action="{% url 'bookcataloging:check_out_book' book.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success">Check Out</button>
+                                </form>
                             {% endif %}
                         </div>
                     </div>
