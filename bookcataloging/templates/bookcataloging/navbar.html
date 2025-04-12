@@ -39,15 +39,10 @@
         style="background-color: #ecf0f1; margin-right: 12px"
         >My Checked Out Books</a>
         <a
-          href="/accounts/google/login"
+          href="{% provider_login_url 'google' %}"
           class="btn nav-btn"
           style="background-color: #ecf0f1; margin-right: 12px"
         >Log In</a>
-        <a
-          href="/accounts/signup/"
-          class="btn nav-btn"
-          style="margin-right: 12px; background-color: #ecf0f1"
-        >Sign Up</a>
         <a
           href="{% url 'bookcataloging:profile' %}"
           class="btn nav-btn"
