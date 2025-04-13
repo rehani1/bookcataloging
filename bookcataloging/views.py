@@ -5,7 +5,7 @@ from .models import UserProfile, Book, BookReview, Collections, Request
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
-
+from django.contrib.auth.models import User, Group
 
 def get_role(request):
     user_role = ''
@@ -17,6 +17,106 @@ def get_role(request):
 
     return user_role
 
+def view_patrons(request):
+    user_role = get_role(request)
+
+    users_group = Group.objects.get(name="Patron")
+    users = users_group.user_set.all()
+    context = {
+        'user_role': user_role,
+        'users': users,
+    }
+    return render(request, 'bookcataloging/view_patrons.html', context)
+
+def upgrade_patrons(request, patron_id):
+    user_role = get_role(request)
+
+    user = get_object_or_404(User, id=patron_id)
+
+    patron_group = Group.objects.get(name='Patron')
+    if patron_group in user.groups.all():
+        user.groups.remove(patron_group)
+
+    librarian_group, created = Group.objects.get_or_create(name='Librarian')
+    user.groups.add(librarian_group)
+    
+    return redirect('bookcataloging:view_patrons')
+def edit_book(request, book_id):
+    genre_choices = Book.GENRE_CHOICES
+    book = get_object_or_404(Book, id=book_id)
+    user_role = get_role(request)
+    
+    if user_role != "Librarian":
+        return redirect('bookcataloging:index')
+    
+    if request.method == 'POST':
+        if 'save_book' in request.POST:
+            book.title = request.POST.get('title')
+            book.author = request.POST.get('Author')
+            book.rating = request.POST.get('Rating')
+            book.review = request.POST.get('Review')
+            book.series = request.POST.get('Series')
+            book.genre = request.POST.get('Genre')
+            book.location = request.POST.get('Location')
+            book.book_image = request.FILES.get('Image')
+            book.save()
+            return redirect('bookcataloging:index')
+    
+    context = {
+        'book': book,
+        'user_role': user_role,
+        'genre_choices': genre_choices,
+    }
+    return render(request, 'bookcataloging/edit_book.html', context)
+
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    user_role = get_role(request)
+    
+    if user_role != "Librarian":
+        return redirect('bookcataloging:index')
+    
+    if request.method == 'POST': 
+        book.delete()
+        return redirect('bookcataloging:index')
+    
+    return redirect('bookcataloging:index')
+
+def add_book(request):
+    user_role = get_role(request)
+    genre_choices = Book.GENRE_CHOICES
+    if request.method == 'POST': # adds the collection
+        title = request.POST.get('title')
+        author = request.POST.get('Author')
+        rating = request.POST.get('Rating')
+        review = request.POST.get('Review')
+        series = request.POST.get('Series')
+        genre = request.POST.get('Genre')
+        location = request.POST.get('Location')
+        image = request.FILES.get('Image')
+        if title:
+            try:
+                Book.objects.create(
+                    title=title,
+                    author=author,
+                    rating=rating,
+                    review=review,
+                    series=series,
+                    genre=genre,
+                    location=location,
+                    book_image=image,
+                    read_status=False,
+                    user = request.user,
+                )
+                return redirect('bookcataloging:index')
+            except Exception as e:
+                print(f'Error creating book: {e}')  # Print the actual error
+    context = {
+        'user_role': user_role,
+        'genre_choices': genre_choices,
+    }
+    return render(request, 'bookcataloging/add_book.html', context)
+
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
@@ -26,6 +126,14 @@ def view_collection(request, collection_id):
     }
     return render(request, 'bookcataloging/view_collection.html', context)
 
+def view_users(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    context = {
+        'collection': collection,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/view_users.html', context)
 def request_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     if request.user.is_authenticated:
@@ -239,33 +347,6 @@ def profile_view(request):
     
 
     return render(request, 'bookcataloging/profile.html', context)
-
-
-def add_book(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        author = request.POST.get('author')
-        isbn = request.POST.get('isbn')
-        read_status = request.POST.get('read_status', 'false').lower() == 'true'
-        rating = request.POST.get('rating')
-        review = request.POST.get('review')
-        genre = request.POST.get('genre')
-
-        try:
-            Book.create_book(
-                title=title,
-                author=author,
-                isbn=isbn,
-                read_status=read_status,
-                rating=rating if rating else None,
-                review=review if review else None,
-                genre=genre
-            )
-            return HttpResponse("Book added successfully.")
-        except ValueError as e:
-            return HttpResponse(str(e))
-
-    return render(request, 'add_book.html')
 
 
 @login_required

@@ -184,3 +184,4 @@ SITE_ID = 6
 
 LOGIN_REDIRECT_URL = "/bookcataloging/"
 LOGOUT_REDIRECT_URL = "/bookcataloging/"
+

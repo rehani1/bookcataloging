@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+    <meta name="author" content="Your Name">
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        {% include "bookcataloging/navbar.html" %}
+    </header>
+    <main class="container mt-4">
+        <h1>Create New Book</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Author">Author</label>
+                <textarea class="form-control" id="Author" name="Author" rows="1"></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Genre">Genre</label>
+                <select id="Genre" name="Genre" class="form-control">
+                    {% for code, name in genre_choices %}
+                        <option value="{{ code }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Rating">Rating</label>
+                <select id="Rating" name="Rating" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Review">Review</label>
+                <textarea class="form-control" id="Review" name="Review" rows="2"></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Series">Series</label>
+                <textarea class="form-control" id="Series" name="Series" rows="1"></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Location">Location</label>
+                <textarea class="form-control" id="Location" name="Location" rows="1"></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <label for="Image">Image</label>
+                <input type="file" class="form-control-file" id="book_image" name="Image" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a href="{% url 'bookcataloging:index' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </main>
+</body>
+</html>

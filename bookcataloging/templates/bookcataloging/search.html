@@ -66,7 +66,7 @@
                             {% endif %}
                             {% if book.checked_out %}
                                 {% if book.checked_out_by == user %}
-                                    <form action="{% url 'bookcataloging:return_book' book.id %}" method="post">
+                                    <form action="{% url 'bookcataloging:return_book' book.id %}" method="post" style="display:inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-warning">Return</button>
                                     </form>
@@ -74,11 +74,19 @@
                                     <span class="text-danger">Checked out by another user</span>
                                 {% endif %}
                             {% else %}
-                                <form action="{% url 'bookcataloging:check_out_book' book.id %}" method="post">
+                                <form action="{% url 'bookcataloging:check_out_book' book.id %}" method="post" style="display:inline;" class="mr-1">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-success">Check Out</button>
                                 </form>
                             {% endif %}
+                            {% if user_role == "Librarian" %}
+                            <div class="btn-group" role="group" aria-label="Book actions">
+                                <form style="display:inline;" class="mr-2" action="{% url 'bookcataloging:edit_book' book.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                </form>                                
+                            </div>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
