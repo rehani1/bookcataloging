@@ -17,6 +17,47 @@ def get_role(request):
 
     return user_role
 
+def edit_book(request, book_id):
+    genre_choices = Book.GENRE_CHOICES
+    book = get_object_or_404(Book, id=book_id)
+    user_role = get_role(request)
+    
+    if user_role != "Librarian":
+        return redirect('bookcataloging:index')
+    
+    if request.method == 'POST':
+        if 'save_book' in request.POST:
+            book.title = request.POST.get('title')
+            book.author = request.POST.get('Author')
+            book.rating = request.POST.get('Rating')
+            book.review = request.POST.get('Review')
+            book.series = request.POST.get('Series')
+            book.genre = request.POST.get('Genre')
+            book.location = request.POST.get('Location')
+            book.book_image = request.FILES.get('Image')
+            book.save()
+            return redirect('bookcataloging:index')
+    
+    context = {
+        'book': book,
+        'user_role': user_role,
+        'genre_choices': genre_choices,
+    }
+    return render(request, 'bookcataloging/edit_book.html', context)
+
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    user_role = get_role(request)
+    
+    if user_role != "Librarian":
+        return redirect('bookcataloging:index')
+    
+    if request.method == 'POST': 
+        book.delete()
+        return redirect('bookcataloging:index')
+    
+    return redirect('bookcataloging:index')
+
 def add_book(request):
     user_role = get_role(request)
     genre_choices = Book.GENRE_CHOICES
