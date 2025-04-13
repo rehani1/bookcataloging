@@ -29,5 +29,7 @@ urlpatterns = [
     path('add_book/', views.add_book, name="add_book" ),
     path('search/<int:book_id>/edit_book/', views.edit_book, name='edit_book'),
     path('search/<int:book_id>/delete/', views.delete_book, name='delete_book'),
+    path('profile/view_patrons/', views.view_patrons, name="view_patrons"),
+    path('profile/view_patrons/<int:patron_id>/upgrade/', views.upgrade_patrons, name="upgrade_patrons"),
 
 ]

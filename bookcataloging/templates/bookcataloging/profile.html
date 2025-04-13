@@ -16,7 +16,10 @@
   </header>
   <div class="container text-left my-4">
     <div class="d-flex justify-content-end mb-3">
-      <a href="{% url 'bookcataloging:edit_profile' %}" class="btn btn-secondary">Edit Profile</a>
+      <a href="{% url 'bookcataloging:edit_profile' %}" class="btn btn-secondary mr-2 ">Edit Profile</a>
+      {% if user_role == "Librarian" %}
+      <a href="{% url 'bookcataloging:view_patrons' %}" class="btn btn-secondary">View Patrons</a>
+      {% endif %}
     </div>
     <form method="POST" enctype="multipart/form-data" id="profile-pic-form">
       {% csrf_token %}

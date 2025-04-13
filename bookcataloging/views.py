@@ -5,7 +5,7 @@ from .models import UserProfile, Book, BookReview, Collections, Request
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
-
+from django.contrib.auth.models import User, Group
 
 def get_role(request):
     user_role = ''
@@ -17,6 +17,30 @@ def get_role(request):
 
     return user_role
 
+def view_patrons(request):
+    user_role = get_role(request)
+
+    users_group = Group.objects.get(name="Patron")
+    users = users_group.user_set.all()
+    context = {
+        'user_role': user_role,
+        'users': users,
+    }
+    return render(request, 'bookcataloging/view_patrons.html', context)
+
+def upgrade_patrons(request, patron_id):
+    user_role = get_role(request)
+
+    user = get_object_or_404(User, id=patron_id)
+
+    patron_group = Group.objects.get(name='Patron')
+    if patron_group in user.groups.all():
+        user.groups.remove(patron_group)
+
+    librarian_group, created = Group.objects.get_or_create(name='Librarian')
+    user.groups.add(librarian_group)
+    
+    return redirect('bookcataloging:view_patrons')
 def edit_book(request, book_id):
     genre_choices = Book.GENRE_CHOICES
     book = get_object_or_404(Book, id=book_id)
