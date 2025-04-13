@@ -21,13 +21,9 @@
         <a href="{% url 'bookcataloging:checked_out_books' %}" class="btn nav-btn"
         style="background-color: #ecf0f1; margin-right: 12px"
         >My Checked Out Books</a>
-      <a href="{% url 'bookcataloging:checked_out_books' %}" class="btn nav-btn"
-      style="background-color: #ecf0f1; margin-right: 12px"
-      >My Checked Out Books</a>
       <a href="/accounts/logout/" class="btn nav-btn" style="margin-right: 12px; background-color: #ecf0f1">Log Out</a>
       <a href="{% url 'bookcataloging:profile' %}" class="btn nav-btn"
         style="background-color: #ecf0f1; margin-right: 12px">My Profile</a>
-        <a href="/accounts/logout/" class="btn nav-btn" style="margin-right: 12px; background-color: #ecf0f1">Log Out</a>
       {% else %}
         <span class="btn nav-btn" style="margin-right: 12px; color: #ecf0f1">
           Hello, Guest
