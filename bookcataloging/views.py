@@ -292,16 +292,26 @@ def add_book_to_collection(request, collection_id):
 
 def index_view(request):
     user_role = get_role(request)
-    return render(request, 'bookcataloging/index.html', {'user_role': user_role})
+    search_by = request.GET.get('search_by', 'title')
+    return render(request, 'bookcataloging/index.html', 
+    {'user_role': user_role,
+    'search_by': search_by,
+    })
 
 
 def search_view(request):
     user_role = get_role(request)
     query = request.GET.get('query', '').strip()
+    search_by = request.GET.get('search_by', 'title')
     results = []
 
     if query:
-        results = Book.objects.filter(title__icontains=query) # gets the search results from the query (book title)
+        if search_by == "title":
+            results = Book.objects.filter(title__icontains=query) # gets the search results from the query (book title)
+        elif search_by == "author":
+            results = Book.objects.filter(author__icontains=query)
+        elif search_by == "genre":
+            results = Book.objects.filter(genre__icontains=query)
 
     if request.method == 'POST': # when submitting the image change
         book_id = request.POST.get('book_id') # get by book id
@@ -315,12 +325,13 @@ def search_view(request):
         else:
             print("No book ID provided in the form.")
 
-        return redirect(f"{request.path}?query={query}")
+        return redirect(f"{request.path}?query={query}&search_by={search_by}")
 
     context = {
         'query': query,
         'results': results,
         'user_role': user_role,
+        'search_by': search_by, 
     }
     return render(request, 'bookcataloging/search.html', context)
 
@@ -397,6 +408,7 @@ def home_view(request):
     recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
     my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
 
+    
     context = {
         'popular_books': popular_books,
         'my_collections': my_collections,

@@ -24,12 +24,45 @@
             Welcome to Book Catalog! Search for a book to check out, find some recommendations, and more!
         </p>
 
-        <form action="{% url 'bookcataloging:search' %}" method="get">
-            <div class="search-bar mt-5 mb-3">
-                <input class="form-control" type="search" name="query" placeholder="Search for a book"
-                    aria-label="Search">
+    
+        <form action="{% url 'bookcataloging:index' %}" method="get">
+            <div class="form-group w-25 ">
+                <label for="search-category">Search By</label>
+                <select class="form-control" id="search_by" name="search_by" onchange="this.form.submit()">
+                    <option value="title" {% if search_by == "title" %}selected{% endif %}>Book Title</option>
+                    <option value="author" {% if search_by == "author" %}selected{% endif %}>Author</option>
+                    <option value="genre" {% if search_by == "genre" %}selected{% endif %}>Genre</option>
+                </select>
             </div>
         </form>
+            {% if search_by == "genre" %}
+                <form action="{% url 'bookcataloging:search' %}" method="get">
+                    <input type="hidden" name="search_by" value="genre">
+                    <label for="genre">Search by Genre</label>
+                    <select class="form-control w-25" id="query" name="query" onchange="this.form.submit()">
+                        <option value="all_genres">Select</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="mystery">Mystery</option>
+                        <option value="romance">Romance</option>
+                        <option value="science_fiction">Science Fiction</option>
+                        <option value="non_fiction">Non-fiction</option>
+                        <option value="historical">Historical</option>
+                        <option value="thriller">Thriller</option>
+                    </select>
+                </form>
+            {% elif search_by == "author" %}
+                <form action="{% url 'bookcataloging:search' %}" method="get">
+                    <input type="hidden" name="search_by" value="author">
+                    <label for="query">Search by Author</label>
+                    <input class="form-control" type="search"  id="query" name="query" placeholder="Author name">
+                </form>
+            {% else %}
+                <form action="{% url 'bookcataloging:search' %}" method="get">
+                    <label for="query">Search by Book Title</label>
+                    <input class="form-control" type="search"  id="query" name="query" placeholder="Book title">
+                </form>
+            {% endif %}
+        
         {% if user_role == "Librarian" %}
         <div class="d-flex justify-content-end">
             <a href="{% url 'bookcataloging:add_book' %}" class="btn btn-primary">Add Book</a>
