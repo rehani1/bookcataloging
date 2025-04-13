@@ -15,7 +15,7 @@
     <header>
         {% include "bookcataloging/navbar.html" %}
     </header>
-    <main class="container mt-4">
+    <main class="flex-grow-1 container mt-4 mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="main-title">Book Collections</h1>
             {% if user.is_authenticated %}
@@ -86,5 +86,7 @@
     </main>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
-
+<footer>
+    {% include "bookcataloging/footer.html" %}
+</footer>
 </html>
