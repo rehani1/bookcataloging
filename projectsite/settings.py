@@ -37,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u4b_ktr%28o+&_0-yf=ylqjo=s+&i7bbexgs#lx-#*_p%y(l_1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #temporarily adding 127.0.0.1 for remote testing
 ALLOWED_HOSTS = ['localhost', 'book-cataloging-app-6c2bbf9fd554.herokuapp.com', '127.0.0.1']
