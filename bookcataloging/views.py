@@ -120,6 +120,8 @@ def add_book(request):
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
+    query = request.GET.get('query', '').strip()
+
     search_by = request.GET.get('search_by', 'title')
 
     context = {
@@ -130,6 +132,7 @@ def view_collection(request, collection_id):
     return render(request, 'bookcataloging/view_collection.html', context)
 
 def search_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
     query = request.GET.get('query', '').strip()
     search_by = request.GET.get('search_by', 'title')
@@ -149,7 +152,8 @@ def search_collection(request, collection_id):
         'query': query,
         'results': results,
         'user_role': user_role,
-        'search_by': search_by, 
+        'search_by': search_by,
+        'collection': collection,
     }
     return render(request, 'bookcataloging/search_collection.html', context)
 
