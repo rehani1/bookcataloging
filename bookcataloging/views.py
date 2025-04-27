@@ -138,15 +138,18 @@ def search_collection(request, collection_id):
     search_by = request.GET.get('search_by', 'title')
     results = []
 
-    if query:
-        if search_by == "title":
-            results = Book.objects.filter(title__icontains=query) # gets the search results from the query (book title)
-        elif search_by == "author":
-            results = Book.objects.filter(author__icontains=query)
-        elif search_by == "genre":
-            results = Book.objects.filter(genre__icontains=query)
-
-        return redirect(f"{request.path}?query={query}&search_by={search_by}")
+    if not query:
+        results = collection.books.all()
+    else: 
+        if query:
+            if search_by == 'title':
+                results = collection.books.filter(title__icontains=query)
+            elif search_by == 'author':
+                results = collection.books.filter(author__icontains=query)
+            elif search_by == 'genre':
+                results = collection.books.filter(genre__iexact=query)
+            else:
+                results = collection.books.all()
 
     context = {
         'query': query,
