@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Yuina Barzdukas">
+    <title>{{ collection.name }} - Search Results</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        {% include "bookcataloging/navbar.html" %}
+    </header>
+
+    <main class="container mt-4">
+        <h1 class="main-title">{{ collection.name }}</h1>
+        <div class="d-flex align-items-center mb-2">
+            <h6 class="text-muted mb-0 mr-2">By {{ collection.owner.username }}</h6>
+            {% if not collection.is_public %}
+            <span class="badge badge-secondary">Private</span>
+            {% endif %}
+        </div>
+
+        {% if collection.description %}
+        <p>{{ collection.description }}</p>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form action="{% url 'bookcataloging:view_collection' collection.id %}" method="get" class="mb-0">
+                <div class="form-group mb-0">
+                    <label for="search-category" class="mb-0">Search By</label>
+                    <select class="form-control" id="search_by" name="search_by" onchange="this.form.submit()">
+                        <option value="title" {% if search_by == "title" %}selected{% endif %}>Book Title</option>
+                        <option value="author" {% if search_by == "author" %}selected{% endif %}>Author</option>
+                        <option value="genre" {% if search_by == "genre" %}selected{% endif %}>Genre</option>
+                    </select>
+                </div>
+            </form>
+        
+            <div>
+                {% if user == collection.owner or user_role == "Librarian" %}
+                <a href="{% url 'bookcataloging:add_book_to_collection' collection.id %}" class="btn btn-primary mr-2">
+                    <i class="fas fa-plus"></i> Add Book
+                </a>
+                {% endif %}
+                
+                {% if user_role == "Librarian" %}
+                <a href="{% url 'bookcataloging:view_users' collection.id %}" class="btn btn-primary">
+                    <i class="fas fa-users"></i> View Users
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        
+        <div class="mb-4">
+        {% if search_by == "genre" %}
+        <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
+            <input type="hidden" name="search_by" value="genre">
+            <label for="genre">Search by Genre</label>
+            <select class="form-control w-25" id="query" name="query" onchange="this.form.submit()">
+                <option value="all_genres">Select</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="mystery">Mystery</option>
+                <option value="romance">Romance</option>
+                <option value="science_fiction">Science Fiction</option>
+                <option value="non_fiction">Non-fiction</option>
+                <option value="historical">Historical</option>
+                <option value="thriller">Thriller</option>
+            </select>
+        </form>
+        {% elif search_by == "author" %}
+        <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
+            <input type="hidden" name="search_by" value="author">
+            <label for="query">Search by Author</label>
+            <input class="form-control" type="search" id="query" name="query" placeholder="Author name">
+        </form>
+        {% else %}
+        <form action="{% url 'bookcataloging:search_collection' collection.id%}" method="get">
+            <label for="query">Search by Book Title</label>
+            <input class="form-control" type="search" id="query" name="query" placeholder="Book title">
+        </form>
+        {% endif %}
+        </div>
+
+        <div class="row mt-4">
+            {% if results %}
+                {% for book in results %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{% if book.book_image %}{{ book.book_image.url }}{% else %}
+                    https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg
+                    {% endif %}" class="card-img-top" alt="Book Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+                            <p class="card-text">
+                                <strong>Genre:</strong> {{ book.genre }}<br>
+                                <strong>Rating:</strong> {{ book.rating|default:"Not rated" }}<br>
+                                <strong>ISBN:</strong> {{ book.isbn }}<br>
+                                <strong>Read Status:</strong> {{ book.read_status|yesno:"Read,Not Read" }}
+                            </p>
+
+                            {% if user == collection.owner or user_role == "Librarian" %}
+                            <form method="POST" action="{% url 'bookcataloging:delete_book_from_collection' collection.id book.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p>No results found for "{{ query }}" in this collection.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </main>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+
+<footer>
+    {% include "bookcataloging/footer.html" %}
+</footer>
+
+</html>

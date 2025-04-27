@@ -120,11 +120,45 @@ def add_book(request):
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
+    query = request.GET.get('query', '').strip()
+
+    search_by = request.GET.get('search_by', 'title')
+
     context = {
         'collection': collection,
         'user_role': user_role,
+        'search_by': search_by,
     }
     return render(request, 'bookcataloging/view_collection.html', context)
+
+def search_collection(request, collection_id):
+    collection = get_object_or_404(Collections, id=collection_id)
+    user_role = get_role(request)
+    query = request.GET.get('query', '').strip()
+    search_by = request.GET.get('search_by', 'title')
+    results = []
+
+    if not query:
+        results = collection.books.all()
+    else: 
+        if query:
+            if search_by == 'title':
+                results = collection.books.filter(title__icontains=query)
+            elif search_by == 'author':
+                results = collection.books.filter(author__icontains=query)
+            elif search_by == 'genre':
+                results = collection.books.filter(genre__iexact=query)
+            else:
+                results = collection.books.all()
+
+    context = {
+        'query': query,
+        'results': results,
+        'user_role': user_role,
+        'search_by': search_by,
+        'collection': collection,
+    }
+    return render(request, 'bookcataloging/search_collection.html', context)
 
 def view_users(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
@@ -212,7 +246,7 @@ def add_collection(request):
     if request.method == 'POST': # adds the collection
         name = request.POST.get('name')
         description = request.POST.get('description', '')
-        is_public = request.POST.get('is_public') == 'off'
+        is_public = request.POST.get('is_public') != 'off'
         
         if name:
             try:
@@ -404,6 +438,7 @@ def edit_profile_view(request):
 
 
 def home_view(request):
+    user_role = get_role(request)
     popular_books = BookReview.get_popular_books()
     recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
     my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
@@ -413,6 +448,7 @@ def home_view(request):
         'popular_books': popular_books,
         'my_collections': my_collections,
         'recommendations': recommendations,
+        'user_role': user_role,
     }
     return render(request, 'bookcataloging/home.html', context)
 

@@ -22,26 +22,73 @@
         </div>
         <main class="container mt-4">
             <h1 class="main-title">{{ collection.name }}</h1>
-            <h6 class="text-muted">By {{ collection.owner.username }}</h6>
-            {% if not collection.is_public %}
-            <span class="badge badge-secondary">Private</span>
-            {% endif %}
+            <div class="d-flex align-items-center mb-2">
+                <h6 class="text-muted mb-0 mr-2">By {{ collection.owner.username }}</h6>
+                {% if not collection.is_public %}
+                <span class="badge badge-secondary">Private</span>
+                {% endif %}
+            </div>
             {% if collection.description %}
             <p>{{ collection.description }}</p>
             {% endif %}
 
-            {% if user == collection.owner or user_role == "Librarian" %}
-            <a href="{% url 'bookcataloging:add_book_to_collection' collection.id %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add Book
-            </a>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <form action="{% url 'bookcataloging:view_collection' collection.id %}" method="get" class="mb-0">
+                    <div class="form-group mb-0">
+                        <label for="search-category" class="mb-0">Search By</label>
+                        <select class="form-control" id="search_by" name="search_by" onchange="this.form.submit()">
+                            <option value="title" {% if search_by == "title" %}selected{% endif %}>Book Title</option>
+                            <option value="author" {% if search_by == "author" %}selected{% endif %}>Author</option>
+                            <option value="genre" {% if search_by == "genre" %}selected{% endif %}>Genre</option>
+                        </select>
+                    </div>
+                </form>
+            
+                <div>
+                    {% if user == collection.owner or user_role == "Librarian" %}
+                    <a href="{% url 'bookcataloging:add_book_to_collection' collection.id %}" class="btn btn-primary mr-2">
+                        <i class="fas fa-plus"></i> Add Book
+                    </a>
+                    {% endif %}
+                    
+                    {% if user_role == "Librarian" %}
+                    <a href="{% url 'bookcataloging:view_users' collection.id %}" class="btn btn-primary">
+                        <i class="fas fa-users"></i> View Users
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            
+            <div class="mb-4">
+            {% if search_by == "genre" %}
+            <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
+                <input type="hidden" name="search_by" value="genre">
+                <label for="genre">Search by Genre</label>
+                <select class="form-control w-25" id="query" name="query" onchange="this.form.submit()">
+                    <option value="all_genres">Select</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="science_fiction">Science Fiction</option>
+                    <option value="non_fiction">Non-fiction</option>
+                    <option value="historical">Historical</option>
+                    <option value="thriller">Thriller</option>
+                </select>
+            </form>
+            {% elif search_by == "author" %}
+            <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
+                <input type="hidden" name="search_by" value="author">
+                <label for="query">Search by Author</label>
+                <input class="form-control" type="search" id="query" name="query" placeholder="Author name">
+            </form>
+            {% else %}
+            <form action="{% url 'bookcataloging:search_collection' collection.id%}" method="get">
+                <label for="query">Search by Book Title</label>
+                <input class="form-control" type="search" id="query" name="query" placeholder="Book title">
+            </form>
             {% endif %}
-
-            {% if user_role == "Librarian" %}
-            <a href="{% url 'bookcataloging:view_users' collection.id %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> View Users
-            </a>
-            {% endif %}
-
+            </div>
             <div class="row">
                 {% for book in collection.books.all %}
                 <div class="col-md-4 mb-4">
@@ -80,4 +127,5 @@
 <footer>
     {% include "bookcataloging/footer.html" %}
 </footer>
+
 </html>
