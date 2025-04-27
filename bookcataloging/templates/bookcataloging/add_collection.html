@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <header>
         {% include "bookcataloging/navbar.html" %}
@@ -29,11 +31,11 @@
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="is_public" name="is_public">
                 <label class="form-check-label" for="is_public">
-                    Make collection private
+                    Make collection public
                 </label>
             </div>
             {% else %}
-                <input type="hidden" name="is_public" value="off"> 
+            <input type="hidden" name="is_public" value="off">
             {% endif %}
             <button type="submit" class="btn btn-primary">Create</button>
             <a href="{% url 'bookcataloging:collections' %}" class="btn btn-secondary">Cancel</a>
@@ -43,4 +45,5 @@
 <footer>
     {% include "bookcataloging/footer.html" %}
 </footer>
+
 </html>
