@@ -120,11 +120,38 @@ def add_book(request):
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
     user_role = get_role(request)
+    search_by = request.GET.get('search_by', 'title')
+
     context = {
         'collection': collection,
         'user_role': user_role,
+        'search_by': search_by,
     }
     return render(request, 'bookcataloging/view_collection.html', context)
+
+def search_collection(request, collection_id):
+    user_role = get_role(request)
+    query = request.GET.get('query', '').strip()
+    search_by = request.GET.get('search_by', 'title')
+    results = []
+
+    if query:
+        if search_by == "title":
+            results = Book.objects.filter(title__icontains=query) # gets the search results from the query (book title)
+        elif search_by == "author":
+            results = Book.objects.filter(author__icontains=query)
+        elif search_by == "genre":
+            results = Book.objects.filter(genre__icontains=query)
+
+        return redirect(f"{request.path}?query={query}&search_by={search_by}")
+
+    context = {
+        'query': query,
+        'results': results,
+        'user_role': user_role,
+        'search_by': search_by, 
+    }
+    return render(request, 'bookcataloging/search_collection.html', context)
 
 def view_users(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
