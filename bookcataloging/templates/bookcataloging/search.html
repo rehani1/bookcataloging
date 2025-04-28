@@ -64,14 +64,6 @@
                                 <strong>Review:</strong> {{ book.review }}
                             </p>
                             {% endif %}
-                            <form action="{% url 'bookcataloging:add_book_rating' book.id %}" method="post" style="display:inline;">
-                                {% csrf_token %}
-                                {% if book.rating %}
-                                    <button type="submit" class="btn btn-primary">Edit Rating</button>
-                                {% else %}
-                                    <button type="submit" class="btn btn-primary">Rate Book</button>
-                                {% endif %}
-                            </form>
                             {% if book.checked_out %}
                                 {% if book.checked_out_by == user %}
                                     <form action="{% url 'bookcataloging:return_book' book.id %}" method="post" style="display:inline;">
@@ -87,7 +79,14 @@
                                     <button type="submit" class="btn btn-success">Check Out</button>
                                 </form>
                             {% endif %}
-<!--                            <a href="{% url 'bookcataloging:add_book_rating' book.id %}" class="btn btn-primary d-inline-block mr-1">Rate Book</a>-->
+                            <form action="{% url 'bookcataloging:add_book_rating' book.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                {% if book.rating %}
+                                    <button type="submit" class="btn btn-primary">Edit Rating</button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-primary">Rate Book</button>
+                                {% endif %}
+                            </form>
                             {% if user_role == "Librarian" %}
                             <div class="btn-group" role="group" aria-label="Book actions">
                                 <form style="display:inline;" class="mr-2" action="{% url 'bookcataloging:edit_book' book.id %}" method="post">

@@ -86,7 +86,7 @@ def delete_book(request, book_id):
 def add_book(request):
     user_role = get_role(request)
     genre_choices = Book.GENRE_CHOICES
-    if request.method == 'POST': # adds the collection
+    if request.method == 'POST':
         title = request.POST.get('title')
         author = request.POST.get('Author')
         rating = request.POST.get('Rating')
@@ -97,7 +97,7 @@ def add_book(request):
         image = request.FILES.get('Image')
         if title:
             try:
-                Book.objects.create(
+                book = Book.objects.create(
                     title=title,
                     author=author,
                     rating=rating,
@@ -109,6 +109,12 @@ def add_book(request):
                     read_status=False,
                     user = request.user,
                 )
+                if rating:
+                    BookRating.objects.create(
+                        book=book,
+                        user=request.user,
+                        rating=rating
+                    )
                 return redirect('bookcataloging:index')
             except Exception as e:
                 print(f'Error creating book: {e}')  # Print the actual error
