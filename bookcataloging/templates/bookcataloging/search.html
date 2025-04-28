@@ -25,6 +25,7 @@
                 <input class="form-control" type="search" name="query" placeholder="Search for another book"
                     aria-label="Search">
                 <input type="hidden" name="search_by" value="{{ search_by }}">
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
 
@@ -78,7 +79,7 @@
                                     <button type="submit" class="btn btn-success">Check Out</button>
                                 </form>
                             {% endif %}
-                            <a href="{% url 'bookcataloging:add_book_rating' book.id %}" class="btn btn-primary mt-2">Rate Book</a>
+                            <a href="{% url 'bookcataloging:add_book_rating' book.id %}" class="btn btn-primary d-inline-block mr-1 mt-2">Rate Book</a>
                             {% if user_role == "Librarian" %}
                             <div class="btn-group" role="group" aria-label="Book actions">
                                 <form style="display:inline;" class="mr-2" action="{% url 'bookcataloging:edit_book' book.id %}" method="post">
