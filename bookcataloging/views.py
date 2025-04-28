@@ -316,7 +316,7 @@ def delete_book_from_collection(request, collection_id, book_id):
 
 def add_book_to_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
-
+    user_role = get_role(request)
     if request.method == 'POST':
         book_ids = request.POST.getlist('books')  
         books = Book.objects.filter(id__in=book_ids)
@@ -328,7 +328,12 @@ def add_book_to_collection(request, collection_id):
     private_book_ids = Book.objects.filter(collections__is_public=False).values_list('id', flat=True)
     available_books = Book.objects.filter(collections=None).distinct()
     
-    return render(request, 'bookcataloging/add_book_to_collection.html', {'collection': collection, 'available_books': available_books})
+    context = {
+        'collection': collection,
+        'available_books': available_books,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/add_book_to_collection.html', context)
 
 
 def index_view(request):
