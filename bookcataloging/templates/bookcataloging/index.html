@@ -62,13 +62,9 @@
                     <input class="form-control" type="search"  id="query" name="query" placeholder="Book title">
                 </form>
             {% endif %}
+            <div class="justify-content-end d-flex">
             <button type="submit" class="btn btn-primary ml-2">Search</button>
-        
-        {% if user_role == "Librarian" %}
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'bookcataloging:add_book' %}" class="btn btn-primary">Add Book</a>
-        </div>
-        {% endif %}
+            </div>
 
 
     </main>
