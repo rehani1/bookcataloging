@@ -436,6 +436,8 @@ def add_book_rating(request, book_id):
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
         if rating_value and rating_value.isdigit() and 1 <= int(rating_value) <= 5:
+            if existing_rating:
+                existing_rating.delete()
             BookRating.objects.create(
                 book=book,
                 user=request.user,

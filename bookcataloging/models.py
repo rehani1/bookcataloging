@@ -105,18 +105,6 @@ class Book(models.Model):
     def get_checked_out_books_by_user(cls, user):
         return cls.objects.filter(checked_out_by=user)
 
-    @classmethod
-    def get_popular_books(cls):
-        popular_books = Book.objects.filter(
-            bookrating__rating__gte=4
-        ).annotate(
-            num_ratings=Count('bookrating')
-        ).filter(
-            num_ratings__gte=3
-        )
-
-        return popular_books
-
 
 class BookRating(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
@@ -152,6 +140,18 @@ class BookRating(models.Model):
         recommendations = set(books_by_fav_authors) | set(books_by_genre)
 
         return recommendations
+
+    @classmethod
+    def get_popular_books(cls):
+        popular_books = Book.objects.filter(
+            bookrating__rating__gte=4
+        ).annotate(
+            num_ratings=Count('bookrating')
+        ).filter(
+            num_ratings__gte=3
+        )
+
+        return popular_books
 
     class Meta:
         unique_together = ('book', 'user')
