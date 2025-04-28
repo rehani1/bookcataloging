@@ -135,7 +135,7 @@ class BookRating(models.Model):
                 num_reads=Count('book')
             )
             .values('book__genre')
-        ).filter(rating__gte=4)
+        ).filter(rating__rating__gte=4)
 
         recommendations = set(books_by_fav_authors) | set(books_by_genre)
 
