@@ -428,12 +428,8 @@ def add_book_rating(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     existing_rating = BookRating.objects.filter(book=book, user=request.user).first()
 
-    if existing_rating:
-        return redirect('book_detail', book_id=book.id)
-
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
-
         if rating_value and rating_value.isdigit() and 1 <= int(rating_value) <= 5:
             BookRating.objects.create(
                 book=book,
