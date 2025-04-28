@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.contrib import messages
+
 
 def get_role(request):
     user_role = ''
