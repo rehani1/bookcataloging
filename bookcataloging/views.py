@@ -326,7 +326,8 @@ def add_book_to_collection(request, collection_id):
             collection.books.add(*books)
             return redirect('bookcataloging:view_collection', collection_id=collection.id)
     private_book_ids = Book.objects.filter(collections__is_public=False).values_list('id', flat=True)
-    available_books = Book.objects.exclude(id__in=private_book_ids)
+    available_books = Book.objects.filter(collections=None).distinct()
+    
     return render(request, 'bookcataloging/add_book_to_collection.html', {'collection': collection, 'available_books': available_books})
 
 
