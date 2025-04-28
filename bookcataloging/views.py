@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
 from django.contrib.auth.models import User, Group
-from django.contrib import messages
 
 
 def get_role(request):
@@ -430,8 +429,7 @@ def add_book_rating(request, book_id):
     existing_rating = BookRating.objects.filter(book=book, user=request.user).first()
 
     if existing_rating:
-        messages.error(request, "You have already rated this book.")
-        return redirect('book_detail', book_id=book.id)  # Change 'book_detail' to your actual view name
+        return redirect('book_detail', book_id=book.id)
 
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
@@ -442,10 +440,7 @@ def add_book_rating(request, book_id):
                 user=request.user,
                 rating=int(rating_value)
             )
-            messages.success(request, "Your rating has been added.")
             return redirect('book_detail', book_id=book.id)
-        else:
-            messages.error(request, "Invalid rating. Please select a value between 1 and 5.")
 
     return render(request, 'bookcataloging/add_book_rating.html', {'book': book})
 

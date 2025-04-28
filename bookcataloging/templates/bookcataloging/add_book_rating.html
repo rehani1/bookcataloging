@@ -16,14 +16,6 @@
         {% include "bookcataloging/navbar.html" %}
     </header>
     <main class="container mt-4 mt-5">
-        {% if messages %}
-            <div class="alert alert-dismissible fade show" role="alert">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
         <h2>Rate "{{ book.title }}"</h2>
 
         <div class="rating-form mt-5">
