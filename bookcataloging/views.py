@@ -497,5 +497,11 @@ def return_book(request, book_id):
 
 @login_required
 def checked_out_books(request):
+    user_role = get_role(request)
     books = Book.get_checked_out_books_by_user(request.user)
-    return render(request, 'bookcataloging/checked_out_books.html', {'books': books})
+    context = {
+
+        'books': books,
+        'user_role': user_role,
+    }
+    return render(request, 'bookcataloging/checked_out_books.html', context)
