@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Q
 
 # Create your models here.
 class UserProfile(models.Model):
@@ -143,13 +143,11 @@ class BookRating(models.Model):
 
     @classmethod
     def get_popular_books(cls):
-        popular_books = Book.objects.filter(
-            bookrating__rating__gte=4
-        ).annotate(
-            num_ratings=Count('bookrating')
+        popular_books = Book.objects.annotate(
+            high_ratings=Count('ratings', filter=Q(ratings__rating__gte=4))
         ).filter(
-            num_ratings__gte=3
-        )
+            high_ratings__gte=3
+        ).distinct()
 
         return popular_books
 
