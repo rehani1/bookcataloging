@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.http import HttpResponse
-from .models import UserProfile, Book, BookReview, Collections, Request
+from .models import UserProfile, Book, BookReview, Collections, Request, BookRating
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
@@ -421,6 +421,32 @@ def add_or_update_review(request, book_id):
         return redirect('book_detail', book_id=book.id)
 
     return render(request, 'add_or_update_review.html', {'book': book, 'review': review})
+
+@login_required
+def add_book_rating(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    existing_rating = BookRating.objects.filter(book=book, user=request.user).first()
+
+    if existing_rating:
+        messages.error(request, "You have already rated this book.")
+        return redirect('book_detail', book_id=book.id)  # Change 'book_detail' to your actual view name
+
+    if request.method == 'POST':
+        rating_value = request.POST.get('rating')
+
+        if rating_value and rating_value.isdigit() and 1 <= int(rating_value) <= 5:
+            BookRating.objects.create(
+                book=book,
+                user=request.user,
+                rating=int(rating_value)
+            )
+            messages.success(request, "Your rating has been added.")
+            return redirect('book_detail', book_id=book.id)
+        else:
+            messages.error(request, "Invalid rating. Please select a value between 1 and 5.")
+
+    return render(request, 'bookcataloging/add_book_rating.html', {'book': book})
+
 
 @login_required
 def edit_profile_view(request):

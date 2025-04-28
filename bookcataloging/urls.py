@@ -32,6 +32,6 @@ urlpatterns = [
     path('profile/view_patrons/', views.view_patrons, name="view_patrons"),
     path('profile/view_patrons/<int:patron_id>/upgrade/', views.upgrade_patrons, name="upgrade_patrons"),
     path('collections/<int:collection_id>/view/search/', views.search_collection, name='search_collection'), 
-
+    path('books/<int:book_id>/rate/', views.add_book_rating, name='add_book_rating'),
 
 ]

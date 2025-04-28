@@ -36,7 +36,7 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
-    rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
+    # rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     review = models.TextField()
     read_status = models.BooleanField()
     book_image = models.ImageField(upload_to='book_pics/', blank=True)
@@ -86,9 +86,10 @@ class Book(models.Model):
         return self.bookreview_set.all()
 
     def get_average_rating(self):
-        reviews = self.bookreview_set.all()
-        total_rating = sum([review.rating for review in reviews if review.rating is not None])
-        return total_rating / len(reviews) if reviews else None
+        ratings = self.ratings.all()
+        if ratings:
+            return sum(r.rating for r in ratings) / ratings.count()
+        return None
 
     def check_out_book(self, user):
         if not self.checked_out:
@@ -104,6 +105,17 @@ class Book(models.Model):
     @classmethod
     def get_checked_out_books_by_user(cls, user):
         return cls.objects.filter(checked_out_by=user)
+
+
+class BookRating(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='book_ratings')
+    rating = models.IntegerField(choices=RATING_CHOICES)
+
+    class Meta:
+        unique_together = ('book', 'user')
 
 
 class BookReview(models.Model):

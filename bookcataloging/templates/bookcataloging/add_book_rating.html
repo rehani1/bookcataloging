@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Yuina Barzdukas">
+    <title>{{ collection.name }}</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Rate "{{ book.title }}"</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="rating">Select your rating (1-5):</label>
+    <select name="rating" id="rating" required>
+        <option value="">--Choose a rating--</option>
+        {% for i in "12345" %}
+            <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Submit Rating</button>
+</form>
+{% endblock %}
