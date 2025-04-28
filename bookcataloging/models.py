@@ -114,9 +114,6 @@ class BookRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='book_ratings')
     rating = models.IntegerField(choices=RATING_CHOICES)
 
-    class Meta:
-        unique_together = ('book', 'user')
-
 
 class BookReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
