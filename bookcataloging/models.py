@@ -36,7 +36,6 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
-    # rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     review = models.TextField()
     read_status = models.BooleanField()
     book_image = models.ImageField(upload_to='book_pics/', blank=True)

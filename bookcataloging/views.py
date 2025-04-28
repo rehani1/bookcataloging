@@ -100,7 +100,6 @@ def add_book(request):
                 book = Book.objects.create(
                     title=title,
                     author=author,
-                    rating=rating,
                     review=review,
                     series=series,
                     genre=genre,
@@ -442,7 +441,7 @@ def add_book_rating(request, book_id):
                 user=request.user,
                 rating=int(rating_value)
             )
-            return redirect('bookcataloging/', book_id=book.id)
+            return redirect('bookcataloging:index', book_id=book.id)
 
     return render(request, 'bookcataloging/add_book_rating.html', {'book': book})
 
