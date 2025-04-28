@@ -1,33 +1,3 @@
-<!--{% load static %}-->
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Add Book</title>-->
-<!--    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">-->
-<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">-->
-<!--</head>-->
-<!--<body>-->
-<!--    <header>-->
-<!--        {% include "bookcataloging/navbar.html" %}-->
-<!--    </header>-->
-<!--<h1>Add Books to "{{ collection.name }}"</h1>-->
-<!--    <form method="POST">-->
-<!--        {% csrf_token %}-->
-<!--        <div class="form-group">-->
-<!--            <label for="books">Select Books to Add:</label>-->
-<!--            <select name="books" id="books" class="form-control" multiple>-->
-<!--                {% for book in available_books %}-->
-<!--                    <option value="{{ book.id }}">{{ book.title }}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <button type="submit" class="btn btn-primary">Add Selected Books</button>-->
-<!--    </form>-->
-<!--</body>-->
-<!--</html>-->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +26,9 @@
             background: white;
             border-radius: 4px;
             cursor: pointer;
+        }
+        .checkbox-grid input[type="checkbox"] {
+        margin-right: 8px;
         }
     </style>
 </head>
