@@ -87,7 +87,7 @@ class Book(models.Model):
     def get_average_rating(self):
         ratings = self.ratings.all()
         if ratings:
-            return sum(r.rating for r in ratings) / ratings.count()
+            return round(sum(r.rating for r in ratings) / ratings.count(), 2)
         return None
 
     def check_out_book(self, user):
@@ -104,6 +104,26 @@ class Book(models.Model):
     @classmethod
     def get_checked_out_books_by_user(cls, user):
         return cls.objects.filter(checked_out_by=user)
+
+    @classmethod
+    def get_popular_books(cls):
+        popular_books = Book.objects.filter(
+            bookrating__rating__gte=4
+        ).annotate(
+            num_ratings=Count('bookrating')
+        ).filter(
+            num_ratings__gte=3
+        )
+
+        return popular_books
+
+
+class BookRating(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='book_ratings')
+    rating = models.IntegerField(choices=RATING_CHOICES)
 
     @classmethod
     def get_book_recommendations(cls, user):
@@ -133,25 +153,8 @@ class Book(models.Model):
 
         return recommendations
 
-    @classmethod
-    def get_popular_books(cls):
-        popular_books = Book.objects.filter(
-            bookrating__rating__gte=4
-        ).annotate(
-            num_ratings=Count('bookrating')
-        ).filter(
-            num_ratings__gte=3
-        )
-
-        return popular_books
-
-
-class BookRating(models.Model):
-    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
-
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='ratings')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='book_ratings')
-    rating = models.IntegerField(choices=RATING_CHOICES)
+    class Meta:
+        unique_together = ('book', 'user')
 
 
 class BookReview(models.Model):
