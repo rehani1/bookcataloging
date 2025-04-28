@@ -463,8 +463,8 @@ def edit_profile_view(request):
 
 def home_view(request):
     user_role = get_role(request)
-    popular_books = BookReview.get_popular_books()
-    recommendations = BookReview.get_book_recommendations(request.user) if request.user.is_authenticated else []
+    popular_books = Book.get_popular_books()
+    recommendations = Book.get_book_recommendations(request.user) if request.user.is_authenticated else []
     my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
 
     
