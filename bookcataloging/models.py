@@ -105,6 +105,46 @@ class Book(models.Model):
     def get_checked_out_books_by_user(cls, user):
         return cls.objects.filter(checked_out_by=user)
 
+    @classmethod
+    def get_book_recommendations(cls, user):
+        books_by_fav_authors = Book.objects.filter(
+            id__in=BookRating.objects.filter(
+                user=user,
+                rating__gte=3
+            ).values('book__author')
+            .annotate(
+                num_books_read=Count('book')
+            )
+            .values('book')
+        )
+
+        books_by_genre = Book.objects.filter(
+            genre__in=BookRating.objects.filter(
+                user=user,
+                rating__gte=4
+            ).values('book__genre')
+            .annotate(
+                num_reads=Count('book')
+            )
+            .values('book__genre')
+        ).filter(rating__gte=4)
+
+        recommendations = set(books_by_fav_authors) | set(books_by_genre)
+
+        return recommendations
+
+    @classmethod
+    def get_popular_books(cls):
+        popular_books = Book.objects.filter(
+            bookrating__rating__gte=4
+        ).annotate(
+            num_ratings=Count('bookrating')
+        ).filter(
+            num_ratings__gte=3
+        )
+
+        return popular_books
+
 
 class BookRating(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
@@ -126,45 +166,6 @@ class BookReview(models.Model):
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title}"
-
-    @classmethod
-    def get_popular_books(cls):
-        popular_books = Book.objects.filter(
-            bookreview__rating__gte=4
-        ).annotate(
-            num_ratings=Count('bookreview')
-        ).filter(
-            num_ratings__gte=3
-        )
-
-        return popular_books
-
-    @classmethod
-    def get_book_recommendations(cls, user):
-        books_by_fav_authors = Book.objects.filter(
-            id__in=cls.objects.filter(
-                user=user,
-                rating__gte=3
-            ).values('book__author').annotate(
-                num_books_read=Count('book'),
-            ).filter(
-                num_books_read__gte=3
-            ).values('book')
-        )
-
-        books_by_genre = Book.objects.filter(
-            genre__in=BookReview.objects.filter(
-                user=user,
-                rating__gte=4
-            ).values('book__genre').annotate(
-                num_reads=Count('book')
-            ).filter(num_reads__gte=5).values('book__genre')
-        ).filter(rating__gte=4)
-
-        recommendations = set(books_by_fav_authors) | set(books_by_genre)
-
-        return recommendations
-
 
 class Collections(models.Model):
     name = models.CharField(max_length=100)
