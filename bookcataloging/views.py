@@ -441,7 +441,7 @@ def add_book_rating(request, book_id):
                 user=request.user,
                 rating=int(rating_value)
             )
-            return redirect('bookcataloging:index', book_id=book.id)
+            return redirect('bookcataloging:index')
 
     return render(request, 'bookcataloging/add_book_rating.html', {'book': book})
 
