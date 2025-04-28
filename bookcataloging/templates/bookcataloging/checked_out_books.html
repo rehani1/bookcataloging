@@ -31,8 +31,6 @@
                         <p class="card-text">
                             <strong>Genre:</strong> {{ book.genre }}<br>
                             <strong>Rating:</strong> {{ book.rating|default:"Not rated" }}<br>
-                            <strong>ISBN:</strong> {{ book.isbn }}<br>
-                            <strong>Read Status:</strong> {{ book.read_status|yesno:"Read,Not Read" }}<br>
                             <strong>Checked Out:</strong> {{ book.checked_out|yesno:"Yes,No" }}
                         </p>
                         {% if book.review %}
