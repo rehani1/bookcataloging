@@ -75,17 +75,26 @@
                     <option value="historical">Historical</option>
                     <option value="thriller">Thriller</option>
                 </select>
+                <div class="justify-content-end d-flex">
+                    <button type="submit" class="btn btn-primary ml-2">Search</button>
+                </div>
             </form>
             {% elif search_by == "author" %}
             <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
                 <input type="hidden" name="search_by" value="author">
                 <label for="query">Search by Author</label>
                 <input class="form-control" type="search" id="query" name="query" placeholder="Author name">
+                <div class="justify-content-end d-flex">
+                    <button type="submit" class="btn btn-primary ml-2">Search</button>
+                </div>
             </form>
             {% else %}
             <form action="{% url 'bookcataloging:search_collection' collection.id%}" method="get">
                 <label for="query">Search by Book Title</label>
                 <input class="form-control" type="search" id="query" name="query" placeholder="Book title">
+                <div class="justify-content-end d-flex">
+                    <button type="submit" class="btn btn-primary ml-2">Search</button>
+                </div>
             </form>
             {% endif %}
             </div>
