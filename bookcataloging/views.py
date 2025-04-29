@@ -231,8 +231,8 @@ def edit_collection(request, collection_id):
     }
     return render(request, 'bookcataloging/edit_collection.html', context)
 
-class AddBookView(TemplateView):
-    template_name = "bookcataloging/add_book.html"
+# class AddBookView(TemplateView):
+#     template_name = "bookcataloging/add_book.html"
 
 def delete_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
