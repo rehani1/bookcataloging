@@ -256,7 +256,7 @@ def add_collection(request):
     if request.method == 'POST': # adds the collection
         name = request.POST.get('name')
         description = request.POST.get('description', '')
-        is_public = request.POST.get('is_public') != 'off'
+        is_public = request.POST.get('is_public') != 'on'
 
         if name:
             try:
