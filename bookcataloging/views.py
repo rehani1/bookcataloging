@@ -440,6 +440,7 @@ def add_or_update_review(request, book_id):
 
 @login_required
 def add_book_rating(request, book_id):
+    user_role = get_role(request)
     book = get_object_or_404(Book, id=book_id)
     existing_rating = BookRating.objects.filter(book=book, user=request.user).first()
 
@@ -454,8 +455,13 @@ def add_book_rating(request, book_id):
                 rating=int(rating_value)
             )
             return redirect('bookcataloging:index')
+        
+    context = {
+    'book': book,
+    'user_role': user_role,
+    }
 
-    return render(request, 'bookcataloging/add_book_rating.html', {'book': book})
+    return render(request, 'bookcataloging/add_book_rating.html', context)
 
 
 @login_required

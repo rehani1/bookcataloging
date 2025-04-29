@@ -11,17 +11,17 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
         {% include "bookcataloging/navbar.html" %}
     </header>
-    <main class="container mt-4 mt-5">
+    <main class="container mt-4 mt-5 flex-fill">
         <h1 class="main-title">
             Search Results
         </h1>
 
-        <a href="{% url 'bookcataloging:index' %}" class="nav-link btn btn-sm rounded-pill px-3 me-2 w-25" style="background-color: #232d4b; color: #ffffff; transition: all 0.2s;">
-            <i class="bi bi-arrow-left me-2"></i> Go Back
+        <a href="{% url 'bookcataloging:index' %}" class="nav-link btn btn-sm rounded-pill px-3 me-2 w-25" style="background-color: #232d4b; color: #ffffff;">
+            <i class="bi bi-arrow-left me-2"></i> Go Back 
           </a>
 
         <div class="search-results mt-5">
