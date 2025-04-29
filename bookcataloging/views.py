@@ -476,10 +476,13 @@ def edit_profile_view(request):
 def home_view(request):
     user_role = get_role(request)
     popular_books = BookRating.get_popular_books()
-    recommendations = BookRating.get_book_recommendations(request.user) if request.user.is_authenticated else []
-    my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
+    if request.user.is_authenticated:
+        recommendations = BookRating.get_book_recommendations(request.user)
+        my_collections = Collections.get_my_collections(request.user)
+    else:
+        return render(request, 'bookcataloging/home.html', {'popular_books': popular_books,'user_role': user_role,})
 
-    recommendations = []
+    # recommendations = []
     if my_collections.exists():
         genre_tally = (
             Book.objects.filter(collections__in=my_collections)
