@@ -129,7 +129,7 @@
                                 {% if book.rating %}
                                     <button type="submit" class="btn btn-primary">Edit Rating</button>
                                 {% else %}
-                                    <button type="submit" class="btn btn-primary">Rate Book</button>
+                                    <button type="submit" class="btn btn-primary" style="background-color: rgba(62, 72, 183, 0.905);">Rate Book</button>
                                 {% endif %}
                             </form>
                             {% if user == collection.owner or user_role == "Librarian" %}
