@@ -75,9 +75,6 @@
                     <option value="historical">Historical</option>
                     <option value="thriller">Thriller</option>
                 </select>
-                <div class="justify-content-end d-flex">
-                    <button type="submit" class="btn btn-primary ml-2">Search</button>
-                </div>
             </form>
             {% elif search_by == "author" %}
             <form action="{% url 'bookcataloging:search_collection' collection.id %}" method="get">
