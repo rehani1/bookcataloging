@@ -35,7 +35,7 @@
                 </label>
             </div>
             {% else %}
-            <input type="hidden" name="is_public" value="off">
+            <input type="hidden" name="is_public" value="on">
             {% endif %}
             <button type="submit" class="btn btn-primary">Create</button>
             <a href="{% url 'bookcataloging:collections' %}" class="btn btn-secondary">Cancel</a>
