@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.db.models import Count 
+from random import sample
 
 
 def get_role(request):
@@ -475,6 +477,20 @@ def home_view(request):
     recommendations = BookRating.get_book_recommendations(request.user) if request.user.is_authenticated else []
     my_collections = Collections.get_my_collections(request.user) if request.user.is_authenticated else []
 
+    recommendations = []
+    if my_collections.exists():
+        genre_tally = (
+            Book.objects.filter(collections__in=my_collections)
+                        .values('genre')
+                        .annotate(total=Count('id'))
+                        .order_by('-total')
+        )
+        if genre_tally:
+            top_genre = genre_tally[0]['genre']       
+            genre_pool = list(Book.objects.filter(genre=top_genre))
+            recommendations = sample(genre_pool, k=min(3, len(genre_pool))) 
+    if not recommendations:
+        recommendations = BookRating.get_book_recommendations(request.user)
     
     context = {
         'popular_books': popular_books,

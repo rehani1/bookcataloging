@@ -1,77 +1,134 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Minimal Layout with Navbar</title>
-  <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <style>
-    .full-height {
-      height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    {% include "bookcataloging/navbar.html" %}
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Minimal Layout with Navbar</title>
+    <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      .full-height {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <header>{% include "bookcataloging/navbar.html" %}</header>
 
-  <div class="container full-height">
-
+    <div class="container full-height">
       <div class="row">
-        <div class="col text-center" style="margin-top: 50px;">
-            <h2>Popular Books</h2>
-            {% if popular_books %}
-                <ul>
-                    {% for book in popular_books %}
-                        <li><strong>{{ book.title }}</strong> by {{ book.author.name }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No popular books found.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="row" style="margin-top: 250px;">
-      <div class="col-md-6 text-center">
-        <h2>My Collections</h2>
-          {% if my_collections %}
-                <div class="row">
-                    {% for collection in my_collections %}
-                        <div class="col-md-6">
-                            <div class="collection-card" onclick="location.href='{% url "bookcataloging:view_collection" collection.id %}';" style="background-color: #f8f9fa; border-radius: 10px; padding: 15px; margin: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-                                <h4>{{ collection.name }}</h4>
-                                <p>{{ collection.description }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
+        <div class="col text-center" style="margin-top: 50px">
+          <h2>Popular Books</h2>
+          {% if popular_books %}
+          <ul>
+            <div class="d-flex flex-wrap justify-content-center">
+              {% for book in popular_books %}
+              <div class="text-center mx-3 mb-4">
+                {% if book.book_image %}
+                <img
+                  src="{{ book.book_image.url }}"
+                  alt="{{ book.title }} cover"
+                  style="
+                    height: 180px;
+                    width: auto;
+                    object-fit: cover;
+                    border: none;
+                  "
+                />
+                {% endif %}
+                <div class="mt-2">
+                  <strong>{{ book.title }}</strong><br />
+                  <small class="text-muted">by {{ book.author }}</small>
                 </div>
-            {% else %}
-                <p>No collections available.</p>
-            {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          </ul>
+          {% else %}
+          <p>No popular books found.</p>
+          {% endif %}
+        </div>
       </div>
+
+      <div class="row mt-5">
+        <div class="col-md-6 text-center">
+          <h2>My Collections</h2>
+          {% if my_collections %}
+          <div class="row g-4 justify-content-center">
+            {% for collection in my_collections %}
+            <div class="col-md-6">
+              {% with collection.books.first as first_book %}
+              <div
+                class="collection-card"
+                onclick='location.href="{% url "bookcataloging:view_collection" collection.id %}";'
+                style="
+                  background-color: #f8f9fa;
+                  border-radius: 10px;
+                  padding: 15px;
+                  margin: 10px;
+                  
+                  cursor: pointer;
+                  transition: transform 0.2s, box-shadow 0.2s;
+                "
+              >
+                {% if first_book and first_book.book_image %}
+                <img
+                  src="{{ first_book.book_image.url }}"
+                  alt="{{ first_book.title }}"
+                  class="img-fluid mb-2"
+                  style="
+                    max-height: 120px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                  "
+                />
+                {% endif %}
+                <h4>{{ collection.name }}</h4>
+                <p>{{ collection.description }}</p>
+              </div>
+              {% endwith %}
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p>No collections available.</p>
+          {% endif %}
+        </div>
         <div class="col-md-6 text-center">
             <h2>Recommendations</h2>
             {% if recommendations %}
-                <ul>
+            
+                <div class="row g-4 justify-content-center">
                     {% for book in recommendations %}
-                        <li><strong>{{ book.title }}</strong> by {{ book.author.name }}</li>
+                        <div class="col-10 col-sm-6 col-md-4 col-lg-3 text-center">
+            
+                            {% if book.book_image %}
+                                <img src="{{ book.book_image.url }}"
+                                     alt="{{ book.title }} cover"
+                                     class="img-fluid mb-2"
+                                     style="height:180px; object-fit:cover; border:none;">
+                            {% endif %}
+            
+                            <strong>{{ book.title }}</strong><br>
+                            <small class="text-muted">by {{ book.author }}</small>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
+            
             {% else %}
                 <p>No recommendations available.</p>
             {% endif %}
+            
         </div>
-    </div>
+      </div>
     </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
-<footer>
-    {% include "bookcataloging/footer.html" %}
-</footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+  <footer>{% include "bookcataloging/footer.html" %}</footer>
 </html>
