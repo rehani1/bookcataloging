@@ -6,7 +6,7 @@ from . import views
 app_name = "bookcataloging"
 urlpatterns = [
     path("", views.index_view, name="index"),
-    path('logout', LogoutView.as_view()),
+    path('logout', LogoutView.as_view(), name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('search/', views.search_view, name='search'),
     path("profile/edit/", views.edit_profile_view, name="edit_profile"),
