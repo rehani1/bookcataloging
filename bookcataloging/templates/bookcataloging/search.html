@@ -11,29 +11,23 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
         {% include "bookcataloging/navbar.html" %}
     </header>
-    <main class="container mt-4 mt-5">
+    <main class="container mt-4 mt-5 flex-fill">
         <h1 class="main-title">
             Search Results
         </h1>
 
-        <form action="{% url 'bookcataloging:search' %}" method="get" class="mt-5">
-            <div class="search-bar">
-                <input class="form-control" type="search" name="query" placeholder="Search for another book"
-                    aria-label="Search">
-                <input type="hidden" name="search_by" value="{{ search_by }}">
-            </div>
-            <div class="justify-content-end d-flex">
-                <button type="submit" class="btn btn-primary ml-2">Search</button>
-            </div>
-        </form>
+        <a href="{% url 'bookcataloging:index' %}" class="nav-link btn btn-sm rounded-pill px-3 me-2 w-25" style="background-color: #232d4b; color: #ffffff;">
+            <i class="bi bi-arrow-left me-2"></i> Go Back 
+          </a>
 
         <div class="search-results mt-5">
             {% if results %}
             <h2>Results:</h2>
+            <p>Results found for "{{ query }}" by search category "{{ search_by }}".</p>
             <div class="row">
                 {% for book in results %}
                 <div class="col-md-4 mb-4">
