@@ -20,8 +20,10 @@
           <!-- User greeting with badge for role -->
           <span class="me-3" style="color: #ecf0f1; white-space: nowrap;">
             <div class="px-1">
-              <i class="bi bi-person-circle me-1"></i>
-              {{ request.user.first_name|default:request.user.username }}
+              <a href="{% url 'bookcataloging:profile' %}" style="color: #ecf0f1">
+                <i class="bi bi-person-circle me-1"></i>
+                {{ request.user.first_name|default:request.user.username }}
+              </a>
               {% if user_role %}
                 <span class="badge rounded-pill text-bg-light ms-1" style="font-size: 0.75rem;">{{ user_role }}</span>
               {% else %}
