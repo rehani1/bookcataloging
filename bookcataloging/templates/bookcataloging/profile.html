@@ -44,12 +44,13 @@
           <p><em>{{ profile.quote }}</em></p>
         </div>
       
-        {% if user_role == "Patron" %}
+        
         <div class="col-md-4">
           <div class="card shadow-sm">
             <div class="card-header text-white" style="background-color:#232d4b;">
               Request Statuses
             </div>
+            {% if user_role == "Patron" %}
             <ul class="list-group list-group-flush">
               {% if pending_requests %}
                 {% for request in pending_requests|slice:":5" %}
