@@ -20,7 +20,7 @@
             <h1 class="main-title">Book Collections</h1>
             {% if user.is_authenticated %}
             <div class="d-flex">
-                <a href="{% url 'bookcataloging:add_collection' %}" class="btn btn-primary mr-2" style="background-color: rgba(62, 72, 183, 0.905);">
+                <a href="{% url 'bookcataloging:add_collection' %}" class="btn btn-primary ml-2 mt-3" style="background-color: #232d4b">
                     <i class="fas fa-plus"></i> Add Collection
                 </a>
                 {% if user_role == "Librarian" %}
