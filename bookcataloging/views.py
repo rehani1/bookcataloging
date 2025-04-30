@@ -184,7 +184,7 @@ def request_collection(request, collection_id):
 
 def view_requests(request):
     user_role = get_role(request)
-    pending_requests = Request.objects.filter(is_approved=False).select_related('user', 'collection')
+    pending_requests = Request.objects.filter(is_approved=False,pending=True).select_related('user', 'collection')
     context = {
         'pending_requests': pending_requests,
         'user_role': user_role,
@@ -195,19 +195,17 @@ def approve_request(request, request_id):
     req = get_object_or_404(Request, id=request_id)
     req.is_approved = True
     req.save()
-
+    req.pending = False
     req.collection.approved_users.add(req.user)
     req.collection.save()
-    
-    req.delete()
 
     return redirect('bookcataloging:view_requests')
 
 def delete_request(request, request_id):
     req = get_object_or_404(Request, id=request_id)
-    req.delete()
-    
+    req.pending = False
     return redirect('bookcataloging:view_requests')
+
 
 def edit_collection(request, collection_id):
     collection = get_object_or_404(Collections, id=collection_id)
@@ -398,13 +396,18 @@ def profile_view(request):
     )
     user_role = get_role(request)
 
-    
+    pending_requests = Request.objects.filter(
+    user=request.user
+    ).select_related('user', 'collection')
+        
     if request.method == 'POST':
         profile.profile_picture = request.FILES['profile_picture']
         profile.save()
         return redirect('bookcataloging:profile')
     context = {'profile': profile,
-    'user_role': user_role}
+    'user_role': user_role,
+    'pending_requests': pending_requests,
+    }
     
 
     return render(request, 'bookcataloging/profile.html', context)
