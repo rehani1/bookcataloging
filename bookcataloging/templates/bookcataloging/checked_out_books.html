@@ -34,7 +34,6 @@
     <title>Checked Out Books</title>
     <link rel="stylesheet" href="{% static 'bookcataloging/home.css' %}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
@@ -64,10 +63,23 @@
                         <p class="card-text"><strong>Review:</strong> {{ book.review }}</p>
                         {% endif %}
 
-                        <form action="{% url 'bookcataloging:return_book' book.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-warning">Return</button>
-                        </form>
+                        <div class="d-flex">
+                            <form class="mr-1" action="{% url 'bookcataloging:return_book' book.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-warning">Return</button>
+                            </form>
+    
+                            <form action="{% url 'bookcataloging:add_book_rating' book.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                {% if book.rating %}
+                                    <button type="submit" class="btn btn-primary">Edit Rating</button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-primary" style="background-color: rgba(62, 72, 183, 0.905);">Rate Book</button>
+                                {% endif %}
+                            </form>
+                        </div>
+
+                        
                     </div>
                 </div>
             </div>
