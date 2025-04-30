@@ -201,6 +201,7 @@ class Request(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     collection = models.ForeignKey(Collections, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
-    
+    pending = models.BooleanField(default=True)
+
     def __str__(self):
         return f"{self.user.username} requested access to {self.collection.name}"

@@ -29,17 +29,3 @@ h1, h2, h3, h4, h5, h6 {
     margin-right: auto;
 }
 
-
-.custom-nav-button {
-    background-color: #232d4b;
-    color: #ffffff;
-    border-radius: 50rem;     /* rounded-pill */
-    padding-left: 1rem;       /* px-3 */
-    padding-right: 1rem;
-    margin-right: 0.5rem;     
-    width: 25%;               
-    font-size: 0.875rem;      
-    display: inline-block;   
-    text-decoration: none;    
-    transition: background-color 0.2s ease;
-  }
